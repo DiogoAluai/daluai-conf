@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 <URL>"
+  exit 1
+fi
+
+
+# Use curl to make a HEAD request to the URL
+http_status=$(curl --head --silent --fail $1 | grep HTTP -i | awk '{print $2}')
+
+
+if [ "$http_status" = "200" ]; then
+  echo "200. The link exists."
+elif [ "$http_status" = "404" ]; then
+  echo "404. The link wasn't found."
+else
+  echo "The link might exist, but there was an issue with the request. HTTP Status: $http_status"
+fi

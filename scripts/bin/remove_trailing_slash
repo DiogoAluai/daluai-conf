@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#
+# Remove trailing slashes if they exist.
+#
+
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 path_to_normalize"
+    exit 1
+fi
+
+
+path_to_normalize="$1"
+echo $(echo "$path_to_normalize" | sed 's:/*$::')

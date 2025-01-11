@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#
+# Script that handles create/start from docker.
+# If container does not exist it creates it.
+#
+
+
+# Check arguments
+if [ $# -lt 2 ]; then
+    echo "Usage: $(basename $0) <container name> <docker image> [optional extra args]"
+    exit 1
+fi
+
+
+# Access arguments
+name="$1"
+image="$2"
+extra_args="$3"
+
+if sudo docker inspect $name > /dev/null 2>&1; then
+    echo "Europa Found!"
+else
+    sudo docker create --name $name $extra_args $image
+fi
+
+sudo docker start $name
+

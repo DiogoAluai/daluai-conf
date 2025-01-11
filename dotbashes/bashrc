@@ -1,0 +1,18 @@
+
+
+# ########## daluai-conf #########
+# ############# BEGIN ############
+
+# Environment variables such as script factory
+if [ -f ~/.bash_envs ]; then
+    . ~/.bash_envs
+fi
+
+# Alias definitions.
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# ########## daluai-conf #########
+# ############## END #############
+

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# Ships script to script_factory, where it's covered by path
+#
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <script>"
+    exit 1
+fi
+
+
+# Access arguments
+scriptToShip="$1"
+
+cp $scriptToShip $factoryBin/

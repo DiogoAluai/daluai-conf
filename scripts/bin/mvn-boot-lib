@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#
+# Use demo lib to create a maven project.
+#
+
+boot_lib=$factoryTemplates/demo-mvn-lib
+
+# Check arguments
+if [ $# -gt 0 ]; then
+    echo "Usage: $(basename $0)"
+    exit 1
+fi
+
+
+# Ask for fields
+
+echo "Group ID: daluai.lib"
+echo -n "Artifact ID: "; read artifactId
+echo -n "Description: "; read artifactDescription
+echo ""
+
+# Check if it already exists
+if [ -d "$artifactId" ]; then
+  echo Artificact \'$artifactId\' already exists here.
+  echo "Aborting"
+  exit
+fi
+
+
+
+echo Creating "$artifactId"...
+
+# Copy demo project to current directory
+cp -r $boot_lib $artifactId
+
+# Change artifact and description fields
+sed -i "s/:ARTIFACT_ID/$artifactId/g"          $artifactId/pom.xml
+sed -i "s/:DESCRIPTION/$artifactDescription/g" $artifactId/pom.xml
+
+# Creating specifically named folder
+artifactIdWithoutDashes=$(echo $artifactId | sed "s/-/_/g") # this is because java does not support dashes in package name
+mkdir $artifactId/src/main/java/daluai/lib/$artifactIdWithoutDashes
+mkdir $artifactId/src/test/java/daluai/lib/$artifactIdWithoutDashes
+
+# Move example test file to correct place and change package name
+demoArtifactTestClass="$artifactId/src/test/java/daluai/lib/demo/DemoApplicationTests.java"
+newArtifactTestClass="$artifactId/src/test/java/daluai/lib/$artifactIdWithoutDashes/DemoApplicationTests.java"
+mv     $demoArtifactTestClass $newArtifactTestClass
+rmdir  $artifactId/src/test/java/daluai/lib/demo
+sed -i "s/package daluai.lib.demo/package daluai.lib.$artifactIdWithoutDashes/g" $newArtifactTestClass
+
+echo "Done"
+
+

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#
+# Edit scriptFactory scripts.
+#
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <factory command>"
+    exit 1
+fi
+
+
+# Access arguments
+script="$1"
+
+# Check if command exists
+if [ -f $factoryBin/$script ]; then
+  echo "Command '$script' detected."
+  echo "Editing..."
+  nano $factoryBin/$script
+else
+  echo "Couldn't find '$1' in script factory."
+fi

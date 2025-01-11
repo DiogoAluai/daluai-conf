@@ -1,0 +1,13 @@
+
+
+# ########## daluai-conf #########
+# ############# BEGIN ############
+
+# This file is meant to be sourced by .bashrc
+
+# export JAVA_HOME="/etc/somewhere"
+
+
+# ########## daluai-conf #########
+# ############## END #############
+

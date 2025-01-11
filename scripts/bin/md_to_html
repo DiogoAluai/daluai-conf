@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+    echo "Usage: command <file.md>."
+    exit 1
+fi
+
+
+html_content="
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+"
+
+html_body=$(cat $1 | markdown)
+
+html_suffix="
+</body>
+</html>
+"
+
+
+echo $html_content $html_body $html_suffix

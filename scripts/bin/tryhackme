@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#
+# Short description.
+#
+
+
+vpn_conf="$factory"/tryhackme.ovpn
+
+sudo openvpn $vpn_conf

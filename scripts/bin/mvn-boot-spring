@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#
+# Use demo spring-boot to create a maven project.
+#
+
+boot_lib=$factoryTemplates/demo-mvn-spring
+
+# Check arguments
+if [ $# -gt 0 ]; then
+    echo "Usage: $(basename $0)"
+    exit 1
+fi
+
+
+# Ask for fields
+
+echo "Group ID: daluai.services"
+echo -n "Artifact ID: "; read artifactId
+echo -n "Description: "; read artifactDescription
+echo ""
+
+# Check if it already exists
+if [ -d "$artifactId" ]; then
+  echo Artificact \'$artifactId\' already exists here.
+  echo "Aborting"
+  exit
+fi
+
+
+
+echo Creating "$artifactId"...
+
+# Copy demo project to current directory
+cp -r $boot_lib $artifactId
+
+# Change artifact and description fields
+sed -i "s/:ARTIFACT_ID/$artifactId/g"          $artifactId/pom.xml
+sed -i "s/:DESCRIPTION/$artifactDescription/g" $artifactId/pom.xml
+
+# Creating specifically named folders
+artifactIdWithoutDashes=$(echo $artifactId | sed "s/-/_/g") # this is because java does not support dashes in package name
+mv    $artifactId/src/main/java/daluai/services/demo $artifactId/src/main/java/daluai/services/$artifactIdWithoutDashes
+mkdir $artifactId/src/test/java/daluai/services/$artifactIdWithoutDashes
+
+# Move example test file to correct place and change package name
+newArtifactSpringAppClass="$artifactId/src/main/java/daluai/services/$artifactIdWithoutDashes/DemoApplication.java"
+demoArtifactTestClass="$artifactId/src/test/java/daluai/services/demo/DemoApplicationTests.java"
+newArtifactTestClass="$artifactId/src/test/java/daluai/services/$artifactIdWithoutDashes/DemoApplicationTests.java"
+mv     $demoArtifactTestClass $newArtifactTestClass
+rmdir  $artifactId/src/test/java/daluai/services/demo
+sed -i "s/package daluai.services.demo/package daluai.services.$artifactIdWithoutDashes/g" $newArtifactTestClass
+sed -i "s/package daluai.services.demo/package daluai.services.$artifactIdWithoutDashes/g" $newArtifactSpringAppClass
+
+
+echo "Done"
+

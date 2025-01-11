@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# Run apps that are installed in the local maven repo
+# Usage example: mvn-run-app daluai.apps.controller-listener -Drelay=true
+#
+
+
+# Input validation
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 <com.example.MyApp> <-Dpublic=true>"
+    exit 1
+fi
+
+# Replace dots with slashes for groupId, assume input is in 'groupId.artifactId' format or smth
+input=$1
+base_path=$(echo "$input" | sed 's/\./\//g')
+
+# Java args
+java_args="$2"
+
+# The path to your .m2 repository
+M2_REPO="$HOME/.m2/repository"
+APP_PATH="$M2_REPO/$base_path"
+
+# Check if the application directory exists
+if [ ! -d "$APP_PATH" ]; then
+    echo "Application path $APP_PATH does not exist."
+    exit 2
+fi
+
+# Find the latest version directory
+LATEST_VERSION=$(ls -dv $APP_PATH/*/ | tail -1)
+
+# Assuming the artifact follows the Maven convention: artifactId-version.jar
+# Extract the artifactId from the input for file naming pattern
+artifactId=$(echo "$input" | sed 's/.*\.//')
+
+# Find the JAR file within the latest version directory
+JAR_FILE=$(find $LATEST_VERSION -type f -name "$artifactId*.jar" | sort -V | tail -n 1)
+
+# Execute the JAR
+if [ -f "$JAR_FILE" ]; then
+    echo "Running $JAR_FILE"
+    java $java_args -jar "$JAR_FILE"
+else
+    echo "No JAR file found for $artifactId in $LATEST_VERSION"
+fi
+

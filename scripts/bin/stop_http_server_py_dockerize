@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# Stop HTML server dockerize with ubuntu running on port 80
+#
+
+
+# Define the same container name used in the run script
+CONTAINER_NAME="ubuntu-python-server"
+
+# Stop the container
+sudo docker stop $CONTAINER_NAME
+
+# Remove the container
+sudo docker rm $CONTAINER_NAME
+
+echo "Container '$CONTAINER_NAME' has been stopped and removed."

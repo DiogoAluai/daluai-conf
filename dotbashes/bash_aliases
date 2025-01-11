@@ -1,0 +1,33 @@
+
+
+# ########## daluai-conf #########
+# ############# BEGIN ############
+
+# This file is meant to be sourced by .bashrc
+
+# utils
+alias ll='ls -AlF'
+alias la='ls -A'
+alias l='ls -CF'
+alias o="oa"
+alias wh="which"
+alias where="type"     # type is better, it tells you the custom ones also. Let's not overrid which because some scripts may use it
+alias wifils="nmcli device wifi list"  # cool wifi list
+alias rcwifi="nmcli device wifi connect $(nmcli device wifi list | grep "*" | awk '{print $3}')"
+alias calculator="bc"
+
+# scripts
+alias script_build="build_script"
+alias cx="chmod +x"
+
+# .bash editing
+alias brc="nano $HOME/.bashrc"
+alias bal="nano $HOME/.bash_aliases"
+alias balias="bal"
+alias bra="bal"
+alias benv="nano $HOME/.bash_envs"
+alias bre="benv"
+
+# ########## daluai-conf #########
+# ############## END #############
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#
+# Launch ytmusic container, and start yt-music
+#
+
+CONTAINER_NAME_OR_ID="ytmusic"
+
+# Check if a container name or ID is provided
+if [ $# -ne 0 ]; then
+  echo "Usage: $0"
+  exit 1
+fi
+
+# Check if the specified container is running
+if ! sudo docker ps | grep -q $CONTAINER_NAME_OR_ID; then
+  echo "Container '$CONTAINER_NAME_OR_ID' is not running."
+  echo "Starting container"
+  sudo docker start $CONTAINER_NAME_OR_ID
+fi
+
+
+sudo docker exec -it $CONTAINER_NAME_OR_ID /usr/bin/su yt # && ytui_music run"

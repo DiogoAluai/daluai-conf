@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $(basename $0) <script_name>"
+    exit 1
+fi
+
+filename="$1" # script name
+
+cp $factoryTemplates/script_template $filename
+chmod +x $filename
+nano $filename

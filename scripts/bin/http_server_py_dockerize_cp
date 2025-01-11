@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#
+# Copy to the python http web server.
+#
+
+CONTAINER_NAME="ubuntu-python-server"
+
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <file to copy>"
+    exit 1
+fi
+
+sudo docker cp $1 $CONTAINER_NAME:/
+

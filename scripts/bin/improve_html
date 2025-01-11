@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+from bs4 import BeautifulSoup
+import sys
+
+def read_file_content(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        print(f"File not found: {file_path}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An error occurred while reading the file: {str(e)}")
+        sys.exit(1)
+
+
+def add_css(html_body):
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html_body, 'html.parser')
+
+    # Define your CSS styles as a string
+    css_styles = """
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+            padding: 10px;
+	    max-width: 600px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #666;
+        }
+    </style>
+    """
+
+    # Add the CSS styles to the HTML head
+    head = soup.find('head')
+    head.insert(0, BeautifulSoup(css_styles, 'html.parser'))
+
+    # Return the modified HTML content
+    return str(soup)
+
+
+if __name__ == "__main__":
+    # Check if there is exactly one argument (the file path)
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <file_path>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    html_body = read_file_content(file_path)
+
+    # Add CSS styles to the HTML body
+    improved_html = add_css(html_body)
+
+    # Print or use the improved HTML
+    print(improved_html)

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#
+# HTML server dockerize with ubuntu running on port 80
+#
+
+
+# Define a container name
+CONTAINER_NAME="ubuntu-python-server"
+
+# Check if a file is provided as an argument
+if [ $# -eq 1 ]; then
+    FILE_TO_COPY=$1
+
+# Check if the file exists
+    if [ -f "$FILE_TO_COPY" ]; then
+        echo "File to copy: $FILE_TO_COPY"
+    else
+        echo "File '$FILE_TO_COPY' does not exist."
+	exit 1
+    fi
+else
+    echo "No file specified to copy."
+fi
+
+# Create and start the container with port forwarding
+sudo docker run -dit --name $CONTAINER_NAME -p 80:8000 ubuntu
+
+# Install Python if not already installed
+sudo docker exec $CONTAINER_NAME apt-get update
+sudo docker exec $CONTAINER_NAME apt-get install -y python3
+
+# If a file is specified, copy it into the container
+if [ ! -z "$FILE_TO_COPY" ]; then
+    echo "Copying $CONTAINER_NAME to container..."
+    sudo docker cp "$FILE_TO_COPY" $CONTAINER_NAME:/
+fi
+
+# Start Python HTTP server on port 8000
+sudo docker exec -dit $CONTAINER_NAME python3 -m http.server
+
+echo ""
+echo "Container '$CONTAINER_NAME' is running with a Python HTTP server on port 80."
+echo "You can copy more files into it using: sudo docker cp <file> $CONTAINER_NAME:/"
+echo "Here's the wget command: wget $(hostname -I | awk '{print $3}')/$(basename $FILE_TO_COPY)"
+
+

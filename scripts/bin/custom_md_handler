@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+    echo "Usage: command <file.md>."
+    exit 1
+fi
+
+mdfile=$1
+tmpHtmlFile="$(mktemp)"
+impTmpHtmlFile="$(mktemp)"
+
+md_to_html $mdfile > $tmpHtmlFile \
+  && improve_html $tmpHtmlFile > $impTmpHtmlFile \
+  && firefox $impTmpHtmlFile 2> /dev/null \
+  && rm $tmpHtmlFile

@@ -1,0 +1,37 @@
+#!/bin/bash
+
+##
+## Enter romance_dawn ubuntu container. If it does not exist, create it.
+##
+
+# Define the container name
+container_name="romance_dawn"
+image_name="ubuntu"
+
+
+# Check if the container exists
+if sudo docker ps -a --format '{{.Names}}' | grep -q "^$container_name$"; then
+    if [ "$1" == "delete" ]; then
+        # Delete the container if the "delete" argument is provided
+        sudo docker stop "$container_name"
+        sudo docker rm "$container_name"
+        echo "Container '$container_name' deleted."
+        exit
+    fi
+
+    if [ "$1" == "cp" ]; then
+        # Copy files to docker container
+        echo "Copying file..."
+        sudo docker cp "$2" $container_name:/root
+        exit
+    fi
+        # Start the existing container
+        echo "Container '$container_name' detected."
+        sudo docker start "$container_name" >/dev/null 2>&1
+        sudo docker exec -it "$container_name" bash -c "cd /root && exec bash"
+else
+    # Create and start the container if it doesn't exist
+    echo "Creating '$container_name'..."
+    sudo docker run -it  --name "$container_name" "$image_name"
+fi
+
