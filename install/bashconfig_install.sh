@@ -11,12 +11,12 @@ if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
 fi
 
 
-daluai_dotbashes_folder="./dotbashes"
+daluai_bashconfig_folder="./bashconfig"
 
 echo "Updating .bash files..."
-cat $daluai_dotbashes_folder/bash_aliases >> $HOME/.bash_aliases
-cat $daluai_dotbashes_folder/bashrc >> $HOME/.bashrc
-cat $daluai_dotbashes_folder/bash_envs >> $HOME/.bash_envs
+cat $daluai_bashconfig_folder/bash_aliases >> $HOME/.bash_aliases
+cat $daluai_bashconfig_folder/bashrc >> $HOME/.bashrc
+cat $daluai_bashconfig_folder/bash_envs >> $HOME/.bash_envs
 echo ""
 
 cd "$original_dir"

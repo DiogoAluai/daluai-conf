@@ -11,7 +11,7 @@
 
 ### internal to daluai-conf
 export factoryBin="/usr/local/bin"
-export scriptTemplates="/usr/share/daluai-conf"
+export scriptTemplates="/usr/share/daluai-conf/templates"
 
 # ########## daluai-conf #########
 # ############## END #############
