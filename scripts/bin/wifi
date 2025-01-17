@@ -34,4 +34,5 @@ fi
 
 rm tmp1 tmp2
 
-nmcli device wifi connect "$nw_toCon_noWspace"
+# newer version of nmcli (in arch) requires "--ask" option to be able to ask for password
+nmcli device wifi connect "$nw_toCon_noWspace" || nmcli device wifi connect --ask "$nw_toCon_noWspace"
