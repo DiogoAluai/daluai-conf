@@ -12,10 +12,10 @@ if [ "$(basename "$(pwd)")" != "daluai-conf" ]; then
 fi
 
 
-install/nano_install.sh || exit 1
-install/dotbashes_install.sh
-install/templates_install.sh
-install/scripts_install.sh
+install/nano_install.sh || exit 1  # installed to user and root dotconfig
+install/dotbashes_install.sh       # location specified in bash_envs: HOME environment variable
+install/templates_install.sh       # location specified in bash_envs: scriptTemplates
+install/scripts_install.sh         # location specified in bash_envs: factoryBin
 
 echo ""
 echo "Done"

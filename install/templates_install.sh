@@ -1,8 +1,16 @@
 #!/bin/bash
 
-templates_install_folder="/opt/daluai-conf/"
+original_dir=$(pwd)
+
+if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
+    cd ..
+    if [[ "$(basename "$(pwd)")" != "daluai-conf" ]]; then
+      echo "Error: Cannot run script from this directory" >&2
+      exit 1
+    fi
+fi
 
 echo "Installing templates..."
-sudo mkdir -p $templates_install_folder
-sudo cp -r scripts/templates $templates_install_folder
+sudo mkdir -p $scriptTemplates
+sudo cp -r scripts/templates $scriptTemplates
 echo ""
