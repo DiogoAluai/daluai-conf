@@ -3,10 +3,14 @@
 # ########## daluai-conf #########
 # ############# BEGIN ############
 
-# This file is meant to be sourced by .bashrc
+# This file is meant to be sourced by .bashrc.
 
+# Export envs here, example:
 # export JAVA_HOME="/etc/somewhere"
 
+
+### internal to daluai-conf
+export factoryBin="/usr/local/bin"
 
 # ########## daluai-conf #########
 # ############## END #############

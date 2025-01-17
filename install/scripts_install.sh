@@ -1,6 +1,6 @@
 #!/bin/bash
 
-scripts_install_folder="/usr/local/bin"
+scripts_install_folder="$factoryBin"
 
 
 echo "Installing scripts..."

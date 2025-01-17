@@ -13,7 +13,10 @@ fi
 
 
 install/nano_install.sh || exit 1
-install/dotconfigs_install.sh
-install/scripts_install.sh
-install/templates_install.sh
 install/dotbashes_install.sh
+install/templates_install.sh
+install/scripts_install.sh
+
+echo ""
+echo "Done"
+echo ""

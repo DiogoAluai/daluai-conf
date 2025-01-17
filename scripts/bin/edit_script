@@ -18,7 +18,7 @@ script="$1"
 if [ -f $factoryBin/$script ]; then
   echo "Command '$script' detected."
   echo "Editing..."
-  nano $factoryBin/$script
+  sudo nano $factoryBin/$script
 else
   echo "Couldn't find '$1' in script factory."
 fi
