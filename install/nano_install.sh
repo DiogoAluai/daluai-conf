@@ -1,5 +1,16 @@
 #!/bin/bash
 
+original_dir="$(pwd)"
+
+if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
+    cd ..
+    if [[ "$(basename "$(pwd)")" != "daluai-conf" ]]; then
+      echo "Error: Cannot run script from this directory" >&2
+      exit 1
+    fi
+fi
+
+
 daluai_dotconfigs_folder="./dotconfigs"
 
 
@@ -24,3 +35,5 @@ cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc $HOME/.config/nano/syntax/
 sudo cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc /root/.config/nano/syntax/
 
 echo ""
+
+cd "$original_dir"

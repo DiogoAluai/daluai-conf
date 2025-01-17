@@ -1,6 +1,6 @@
 #!/bin/bash
 
-original_dir=$(pwd)
+original_dir="$(pwd)"
 
 if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
     cd ..
@@ -14,3 +14,5 @@ echo "Installing templates..."
 sudo mkdir -p $scriptTemplates
 sudo cp -r scripts/templates $scriptTemplates
 echo ""
+
+cd "$original_dir"
