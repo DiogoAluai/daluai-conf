@@ -4,7 +4,7 @@
 # Use demo spring-boot to create a maven project.
 #
 
-boot_lib=$factoryTemplates/demo-mvn-spring
+boot_lib=$scriptTemplates/demo-mvn-spring
 
 # Check arguments
 if [ $# -gt 0 ]; then

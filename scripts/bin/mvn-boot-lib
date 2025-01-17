@@ -4,7 +4,7 @@
 # Use demo lib to create a maven project.
 #
 
-boot_lib=$factoryTemplates/demo-mvn-lib
+boot_lib=$scriptTemplates/demo-mvn-lib
 
 # Check arguments
 if [ $# -gt 0 ]; then

@@ -7,6 +7,6 @@ fi
 
 filename="$1" # script name
 
-cp $factoryTemplates/script_template $filename
+cp $scriptTemplates/script_template $filename
 chmod +x $filename
 nano $filename
