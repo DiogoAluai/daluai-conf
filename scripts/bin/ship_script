@@ -14,4 +14,4 @@ fi
 # Access arguments
 scriptToShip="$1"
 
-cp $scriptToShip $factoryBin/
+sudo cp $scriptToShip $factoryBin/
