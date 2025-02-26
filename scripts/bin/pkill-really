@@ -1,0 +1,11 @@
+
+
+# Check if at least one project is provided
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 service_name"
+  echo "Example: $0 sqlworkbench"
+  exit 1
+fi
+
+
+ps aux | grep "$1" | grep -v grep | awk '{print $2}' | xargs kill -9
