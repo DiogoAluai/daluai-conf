@@ -10,9 +10,10 @@ if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
     fi
 fi
 
+source $HOME/.bash_envs # get internal env variables
 echo "Installing templates..."
 sudo mkdir -p $scriptTemplates
-sudo cp -r scripts/templates $scriptTemplates
+sudo cp -r scripts/templates/* $scriptTemplates
 echo ""
 
 cd "$original_dir"

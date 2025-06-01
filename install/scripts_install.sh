@@ -10,6 +10,8 @@ if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
     fi
 fi
 
+source $HOME/.bash_envs # get internal env variables
+
 echo "Installing scripts..."
 for script in scripts/bin/*; do
   chmod +x $script
