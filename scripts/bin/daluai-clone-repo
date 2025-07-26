@@ -1,0 +1,24 @@
+# Convenience script to clone daluai repositories
+
+# Check if at least one project is provided
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 <repo_name_1> <repo_name_2>"
+  echo "Example: $0 services-hub"
+  exit 1
+fi
+
+git_handle="DiogoAluai"
+
+echo ""
+for repo in "$@"; do
+  repo_ssh_url="git@github.com:$git_handle/$repo.git"
+  echo "Cloning '$repo_ssh_url'"
+  git clone $repo_ssh_url || {
+    red-echo "Could not clone '$repo'"
+  }
+  echo ""   
+done
+
+
+
+
