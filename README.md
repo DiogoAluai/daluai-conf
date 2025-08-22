@@ -13,7 +13,9 @@ Some of my most used are:
 ### .bashrc
 The configuration appends aliases to `~/.bash_aliases` and environment variables to `~/.bash_envs`. The `~/.bashrc` files is also adapted to source from these two.
 
-### Nano theme (dotconfig files)
+### Nano editor config
+The nano dotconfig alters keybindings and the visual aspect. 
+Editor colors differ for normal user and root, so that it grabs your atention on possibly critical edits. There is `ctrl+c` and `ctrl+v`, however `ctrl+k` remains as cut so that `ctrl+x` is reserved to exit the editor!
 Example, running custom script `build_script some_script.sh` will present you with the nano editor with a template ready to go:
 
 <p align="center">
