@@ -12,7 +12,7 @@ alias la="ls -A"
 alias l="ls -CF"
 alias o="xdg-open"
 alias wh="which"
-alias where="type"     # type is better, it tells you the custom ones also. Let's not overrid which because some scripts may use it
+alias where="type"     # "type" is amazing, it tells you more than "which". Let's not override "which" because some scripts may use it
 alias calculator="bc"
 
 alias python="python3"
