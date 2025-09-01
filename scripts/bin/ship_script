@@ -1,17 +1,32 @@
 #!/bin/bash
 
 #
-# Ships script to script_factory, where it's covered by path
+# Copy provided script to $factoryBin folder, while being verbose about it, and removing '.sh' file extension.
 #
 
-# Check arguments
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <script>"
-    exit 1
+
+# Usage: install_script path/to/script.sh
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename $0) <script>"
+  echo -n "Number of arguments provided for install function were... "; red-echo "unreasonable"
+  echo "Should've gotten one argument, instead got $#:"
+  for arg in "$@"
+  do
+    echo -n "  $arg"
+  done
+  echo
+  exit 1
 fi
 
+install_dir="$factoryBin/"
+script_file="$1"
+script_basename="$(basename $script_file)"
+script_name_no_extension="${script_basename%.*}"
 
-# Access arguments
-scriptToShip="$1"
+echo "Installing $script_file"
+sudo chmod +x "$script_file"
+sudo cp "$script_file" "$install_dir/$script_name_no_extension" || {
+  red-echo "[Error] Could not copy, aborting install"
+  exit 1
+}
 
-sudo cp $scriptToShip $factoryBin/
