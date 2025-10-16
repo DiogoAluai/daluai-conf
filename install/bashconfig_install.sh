@@ -17,6 +17,7 @@ echo "Updating .bash files..."
 cat $daluai_bashconfig_folder/bash_aliases >> $HOME/.bash_aliases
 cat $daluai_bashconfig_folder/bashrc >> $HOME/.bashrc
 cat $daluai_bashconfig_folder/bash_envs >> $HOME/.bash_envs
+cp -r $daluai_bashconfig_folder/bash_completion.d $HOME/.bash_completion.d
 echo ""
 
 cd "$original_dir"

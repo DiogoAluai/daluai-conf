@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+##
+## Source this script to add complete (tab) to 'example-command'
+##
+
+
+_example_command_complete() {
+    local cur cache_dir
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    cache_dir="/some/cache/path"
+    COMPREPLY=( $(compgen -W "$(ls "$cache_dir")" -- "$cur") )
+}
+complete -F _example_command_complete example-command
+
+
+

@@ -2,7 +2,8 @@
 
 # ########## daluai-conf #########
 # ############# BEGIN ############
-
+# todo: make this a standalone file and leave bashrc alone. Bashrc would have an only sourced line, and not append there for every install
+# same for .bash files
 # Environment variables such as script factory
 if [ -f ~/.bash_envs ]; then
     . ~/.bash_envs
@@ -11,6 +12,13 @@ fi
 # Alias definitions.
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
+fi
+
+# Script completeness
+if [ -d ~/.bash_completion.d ]; then
+    for f in ~/.bash_completion.d/*; do
+        source "$f"
+    done
 fi
 
 # ########## daluai-conf #########
