@@ -11,12 +11,13 @@ Some of my most used are:
 - `enter        # get shell of running docker container`
 
 ### .bashrc
-The configuration appends aliases to `~/.bash_aliases` and environment variables to `~/.bash_envs`. The `~/.bashrc` files is also adapted to source from these two.
+The installation appends aliases to `~/.bash_aliases` and environment variables to `~/.bash_envs`. The `~/.bashrc` file is also adapted to source from these two.
 
 ### Nano editor config
 The nano dotconfig alters keybindings and the visual aspect. 
-Editor colors differ for normal user and root, so that it grabs your atention on possibly critical edits. There is `ctrl+c` and `ctrl+v`, however `ctrl+k` remains as cut so that `ctrl+x` is reserved to exit the editor!
-Example, running custom script `build_script some_script.sh` will present you with the nano editor with a template ready to go:
+Editor colors differ between normal and root users, so that it grabs your atention on privileged edits. There is `ctrl+c` and `ctrl+v`, however `ctrl+k` remains as cut so that `ctrl+x` is reserved to exit the editor.
+<br>
+Running script `build_script some_script.sh` will present you with the nano editor with a template ready to go:
 
 <p align="center">
   <img width="459" height="387" alt="image" src="https://github.com/user-attachments/assets/a4ab602e-3970-409f-b5a8-2108970af604" />
