@@ -15,7 +15,7 @@ source $HOME/.bash_envs # get internal env variables
 echo "Installing scripts..."
 for script in scripts/bin/*; do
   chmod +x $script
-  echo "- $script..."
+  echo "- $script"
   sudo cp $script $factoryBin
 done
 echo ""
