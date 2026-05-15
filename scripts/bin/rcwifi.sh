@@ -1,2 +1,2 @@
-#!/bin/bash
+#!/usr/bin/env bash
 nmcli device wifi connect $(nmcli device wifi list | grep "*" | awk '{print $3}')

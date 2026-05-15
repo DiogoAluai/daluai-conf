@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 original_dir="$(pwd)"
 
@@ -16,7 +16,9 @@ echo "Installing scripts..."
 for script in scripts/bin/*; do
   chmod +x $script
   echo "- $script"
-  sudo cp $script $factoryBin
+  # todo: fix python scripts
+  script_name=$(basename "$script")
+  sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.sh}
 done
 echo ""
 

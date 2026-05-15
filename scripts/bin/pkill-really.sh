@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 
 # Check if at least one project is provided
 if [ "$#" -ne 1 ]; then

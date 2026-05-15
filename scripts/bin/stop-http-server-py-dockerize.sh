@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Stop HTML server dockerize with ubuntu running on port 80

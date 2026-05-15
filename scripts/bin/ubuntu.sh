@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 ##
-## Enter daluai-kali container. If it does not exist, create it.
+## Enter romance_dawn ubuntu container. If it does not exist, create it.
 ##
 
 # Define the container name
-container_name="daluai-kali"
-image_name="kali"
+container_name="romance_dawn"
+image_name="ubuntu"
 
 
 # Check if the container exists

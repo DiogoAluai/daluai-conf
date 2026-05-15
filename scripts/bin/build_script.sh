@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ $# -lt 1 ]; then
     echo "Usage: $(basename $0) <script_name>"
@@ -7,6 +7,6 @@ fi
 
 filename="$1" # script name
 
-cp $scriptTemplates/script_template $filename
+cp $DALUAI_CONF_TEMPLATES_LOCATION/script_template $filename
 chmod +x $filename
 nano $filename

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 wifils > tmp1;
 echo "Index" >tmp2 ;seq 1 $(cat tmp1| wc -l) | column -t >> tmp2;

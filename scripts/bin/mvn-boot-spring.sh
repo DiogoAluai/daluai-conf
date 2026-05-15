@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Use demo spring-boot to create a maven project.
 #
 
-boot_lib=$scriptTemplates/demo-mvn-spring
+boot_lib=$DALUAI_CONF_TEMPLATES_LOCATION/demo-mvn-spring
 
 # Check arguments
 if [ $# -gt 0 ]; then

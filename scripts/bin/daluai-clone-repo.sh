@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Convenience script to clone daluai repositories
 
 # Check if at least one project is provided

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 original_dir="$(pwd)"
 
@@ -12,8 +12,8 @@ fi
 
 source $HOME/.bash_envs # get internal env variables
 echo "Installing templates..."
-sudo mkdir -p $scriptTemplates
-sudo cp -r scripts/templates/* $scriptTemplates
+sudo mkdir -p $DALUAI_CONF_TEMPLATES_LOCATION
+sudo cp -r scripts/templates/* $DALUAI_CONF_TEMPLATES_LOCATION
 echo ""
 
 cd "$original_dir"

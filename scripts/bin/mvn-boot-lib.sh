@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Use demo lib to create a maven project.
 #
 
-boot_lib=$scriptTemplates/demo-mvn-lib
+boot_lib=$DALUAI_CONF_TEMPLATES_LOCATION/demo-mvn-lib
 
 # Check arguments
 if [ $# -gt 0 ]; then

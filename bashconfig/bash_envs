@@ -10,8 +10,8 @@
 
 
 ### internal to daluai-conf
-export factoryBin="/usr/local/bin"
-export scriptTemplates="/usr/share/daluai-conf/templates"
+export DALUAI_CONF_INSTALL_LOCATION="/usr/local/bin"
+export DALUAI_CONF_TEMPLATES_LOCATION="/usr/share/daluai-conf/templates"
 
 # ########## daluai-conf #########
 # ############## END #############

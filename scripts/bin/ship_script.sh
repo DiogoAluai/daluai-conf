@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
-# Copy provided script to $factoryBin folder, while being verbose about it, and removing '.sh' file extension.
+# Copy provided script to $DALUAI_CONF_INSTALL_LOCATION folder, while being verbose about it, and removing '.sh' file extension.
 #
 
 
@@ -18,7 +18,7 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-install_dir="$factoryBin/"
+install_dir="$DALUAI_CONF_INSTALL_LOCATION/"
 script_file="$1"
 script_basename="$(basename $script_file)"
 script_name_no_extension="${script_basename%.*}"

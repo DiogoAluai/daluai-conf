@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # Edit scriptFactory scripts.
@@ -15,10 +15,10 @@ fi
 script="$1"
 
 # Check if command exists
-if [ -f $factoryBin/$script ]; then
+if [ -f $DALUAI_CONF_INSTALL_LOCATION/$script ]; then
   echo "Command '$script' detected."
   echo "Editing..."
-  sudo nano $factoryBin/$script
+  sudo nano $DALUAI_CONF_INSTALL_LOCATION/$script
 else
   echo "Couldn't find '$1' in script factory."
 fi
