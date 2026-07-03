@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+##
+## Create json schema from stdin json
+##
+
+
+if [ -t 0 ]; then
+    echo "No input piped in stdin"
+    exit 1
+fi
+
+input=$(cat)
+
+echo "$input" | jq '
+def typeof:
+  if type == "object" then map_values(typeof)
+  elif type == "array" then (if length > 0 then [.[0] | typeof] else ["any"] end)
+  else type
+  end;
+typeof
+'
