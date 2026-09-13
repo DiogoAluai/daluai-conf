@@ -18,6 +18,8 @@ alias calculator="bc"
 alias python="python3"
 alias nanol="nano --rcfile ~/.config/nano/nanorc-nolinenumbers"
 alias naon="nano"
+alias nv="nvim"
+alias nv="nvim"
 
 alias wifils="nmcli device wifi list"  # cool wifi list
 alias rcwifi="nmcli device wifi connect $(nmcli device wifi list | grep "*" | awk '{print $3}')"
@@ -27,11 +29,11 @@ alias script_build="build_script"
 alias cx="chmod +x"
 
 # .bash editing
-alias brc="nano $HOME/.bashrc"
-alias bal="nano $HOME/.bash_aliases"
+alias brc="nvim $HOME/.bashrc"
+alias bal="nvim $HOME/.bash_aliases"
 alias balias="bal"
 alias bra="bal"
-alias benv="nano $HOME/.bash_envs"
+alias benv="nvim $HOME/.bash_envs"
 alias bre="benv"
 
 # ########## daluai-conf #########

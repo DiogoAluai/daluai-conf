@@ -34,6 +34,11 @@ sudo cp $daluai_dotconfigs_folder/nano/nanorc-nolinenumbers /root/.config/nano/n
 cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc $HOME/.config/nano/syntax/
 sudo cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc /root/.config/nano/syntax/
 
+# neovim
+mkdir -p $HOME/.config/
+cp -r $daluai_dotconfigs_folder/nvim ~/.config/
+echo "[INFO] To install neovim download here: https://github.com/neovim/neovim/tags"
+
 echo ""
 
 cd "$original_dir"

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+##
+## Update neovim plugins
+##
+
+nvim --headless "+Lazy! sync" +qa

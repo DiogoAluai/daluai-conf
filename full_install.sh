@@ -12,7 +12,7 @@ if [ "$(basename "$(pwd)")" != "daluai-conf" ]; then
 fi
 
 
-install/nano_install.sh || exit 1  # installed to user and root dotconfig
+install/dotconfigs_install.sh || exit 1  # installed to user and root dotconfig
 install/bashconfig_install.sh      # location specified in bash_envs: HOME environment variable
 source $HOME/.bashrc # get internal env variables
 install/templates_install.sh       # location specified in bash_envs: DALUAI_CONF_TEMPLATES_LOCATION

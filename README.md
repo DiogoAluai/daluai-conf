@@ -13,7 +13,7 @@ Some of my most used are:
 ### .bashrc
 The installation appends aliases to `~/.bash_aliases` and environment variables to `~/.bash_envs`. The `~/.bashrc` file is also adapted to source from these two.
 
-### Nano editor config
+### Dotconfigs installation
 The nano dotconfig alters keybindings and the visual aspect. 
 Editor colors differ between normal and root users, so that it grabs your atention on privileged edits. There is `ctrl+c` and `ctrl+v`, however `ctrl+k` remains as cut so that `ctrl+x` is reserved to exit the editor.
 <br>
@@ -22,3 +22,6 @@ Running script `build_script some_script.sh` will present you with the nano edit
 <p align="center">
   <img width="459" height="387" alt="image" src="https://github.com/user-attachments/assets/a4ab602e-3970-409f-b5a8-2108970af604" />
 </p>
+
+There is also a new nvim dotconfig folder
+
