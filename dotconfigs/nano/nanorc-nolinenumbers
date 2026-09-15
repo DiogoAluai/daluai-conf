@@ -296,7 +296,7 @@ bind ^C copy main
 bind ^V paste all
 #bind ^Q exit all
 #bind ^S savefile main
-#bind ^W writeout main
+bind ^W exit main
 bind ^N insert main # open file
 #set multibuffer
 #bind ^H help all # ^H == ctrl+backspace in some terminals!
