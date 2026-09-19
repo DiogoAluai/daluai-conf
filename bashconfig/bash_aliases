@@ -19,7 +19,10 @@ alias python="python3"
 alias nanol="nano --rcfile ~/.config/nano/nanorc-nolinenumbers"
 alias naon="nano"
 alias nv="nvim"
-alias nv="nvim"
+alias vn="nvim"
+alias nvd="NVIM_DEBUUG=true nvim"
+alias vnd="NVIM_DEBUUG=true nvim"
+
 
 alias wifils="nmcli device wifi list"  # cool wifi list
 alias rcwifi="nmcli device wifi connect $(nmcli device wifi list | grep "*" | awk '{print $3}')"
