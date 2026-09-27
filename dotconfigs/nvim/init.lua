@@ -1,8 +1,14 @@
 
+
 -----------------------------------------------------------
 -- CUA-style / non-modal Neovim
 -----------------------------------------------------------
 
+--asd = nil
+--asd.();
+
+
+-- Debug mode
 if vim.env.NVIM_DEBUUG == "true" then
     -- Print every pressed key
     vim.on_key(function(key)
@@ -11,11 +17,12 @@ if vim.env.NVIM_DEBUUG == "true" then
 end
 
 
-
-
 require("config.lazy")
-
 require("bindings").bind()
+
+-- Example Treesitter query:
+-- vim.cmd("hi @function.builtin guifg=orange")
+-- :InspectTree to check the tree
 
 -----------------------------------------------------------
 -- Automatically return to Insert mode when opening a file
