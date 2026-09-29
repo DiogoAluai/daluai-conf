@@ -9,4 +9,4 @@ filename="$1" # script name
 
 cp $DALUAI_CONF_TEMPLATES_LOCATION/script_template $filename
 chmod +x $filename
-nano $filename
+$DALUAI_CONF_EDITOR_COMMAND $filename

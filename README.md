@@ -17,7 +17,7 @@ The installation appends aliases to `~/.bash_aliases` and environment variables 
 The nano dotconfig alters keybindings and the visual aspect. 
 Editor colors differ between normal and root users, so that it grabs your atention on privileged edits. There is `ctrl+c` and `ctrl+v`, however `ctrl+k` remains as cut so that `ctrl+x` is reserved to exit the editor.
 <br>
-Running script `build_script some_script.sh` will present you with the nano editor with a template ready to go:
+Running script `build_script some_script.sh` will present you with the an editor with a template ready to go:
 
 <p align="center">
   <img width="459" height="387" alt="image" src="https://github.com/user-attachments/assets/a4ab602e-3970-409f-b5a8-2108970af604" />

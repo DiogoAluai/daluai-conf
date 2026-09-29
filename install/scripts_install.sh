@@ -14,12 +14,21 @@ source $HOME/.bash_envs # get internal env variables
 
 echo "Installing scripts..."
 for script in scripts/bin/*; do
-  chmod +x $script
-  echo "- $script"
-  # todo: fix python scripts
-  script_name=$(basename "$script")
-  sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.sh}
+    if [ -f "$script" ]; then
+        chmod +x $script
+        echo "- $script"
+        script_name=$(basename "$script")
+        sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.sh}
+    fi
 done
+
+for script in scripts/bin/python/*; do
+    chmod +x $script
+    echo "- $script"
+    script_name=$(basename "$script")
+    sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.py}
+done
+
 echo ""
 
 cd "$original_dir"

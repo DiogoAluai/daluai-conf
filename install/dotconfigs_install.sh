@@ -61,6 +61,7 @@ if [ ! -d "$HOME/.config/nvim" ]; then
     echo "Installing neovim config"
     mkdir -p $HOME/.config/
     cp -r $daluai_dotconfigs_folder/nvim ~/.config/
+    echo "[INFO] Consider adding config for root user: \`sudo cp -r ~/.config/nvim /root/.config/\`"
     echo "[INFO] To install neovim download here: https://github.com/neovim/neovim/tags"
     echo "[INFO] To install basedpyright lsp, execute: \`uv tool install basedpyright\`"
     echo "[INFO] To install Ruff (python linter/formatter) see here: https://docs.astral.sh/ruff/installation/"

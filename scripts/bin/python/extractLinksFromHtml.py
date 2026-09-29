@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
 from bs4 import BeautifulSoup
@@ -10,19 +10,19 @@ def extract_links_from_html_file(filename):
         with open(filename, 'r', encoding='utf-8') as file:
             # Read the file content
             html_content = file.read()
-        
+
         # Parse the HTML content using BeautifulSoup
         soup = BeautifulSoup(html_content, 'html.parser')
-        
+
         # Find all <a> tags in the HTML
         a_tags = soup.find_all('a')
-        
+
         # Extract and print the links from the <a> tags
         for a_tag in a_tags:
             link = a_tag.get('href')
             if link:
                 print(link)
-    
+
     except FileNotFoundError:
         print(f"File not found: {filename}")
     except Exception as e:

@@ -18,7 +18,7 @@ script="$1"
 if [ -f $DALUAI_CONF_INSTALL_LOCATION/$script ]; then
   echo "Command '$script' detected."
   echo "Editing..."
-  sudo nano $DALUAI_CONF_INSTALL_LOCATION/$script
+  sudo $DALUAI_CONF_EDITOR_COMMAND $DALUAI_CONF_INSTALL_LOCATION/$script
 else
   echo "Couldn't find '$1' in script factory."
 fi
