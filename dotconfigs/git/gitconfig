@@ -1,0 +1,7 @@
+[core]
+	autocrlf = input
+	editor = nvim -f
+[init]
+	defaultBranch = master
+[fetch]
+	tags = true
