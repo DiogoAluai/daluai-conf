@@ -14,6 +14,17 @@ function M.bind()
     vim.keymap.set({ "n", "i" }, "<C-h>", utils.telescope_live_help, { desc = 'Telescope help tags' })
     vim.keymap.set({ "n", "i" }, "<C-S-c>", utils.telescope_find_files_in_config, { desc = 'Find Neovim config files' })
     vim.keymap.set({ "n", "i" }, "<C-S-g>", utils.telescope_find_all_in_config, { desc = 'Grep Neovim config' })
+    local actions = require("telescope.actions")
+    require("telescope").setup({
+        defaults = {
+            mappings = {
+                i = {
+                    ["<Esc>"] = actions.close,
+                    ["<C-BS>"] = function() vim.api.nvim_input("<C-w>") end,
+                },
+            },
+        },
+    })
     -- Tabs
     vim.keymap.set({ "n", "i" }, "<M-Left>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
     vim.keymap.set({ "n", "i" }, "<M-Right>", "<cmd>bnext<CR>", { desc = "Next buffer" })
@@ -37,6 +48,10 @@ function M.bind()
     vim.keymap.set("i", "<C-S-Left>", "<C-O>vb")
     vim.keymap.set("i", "<C-S-Right>", "<C-O>ve")
     --  visual mode
+    vim.keymap.set("v", "<Up>", "<Esc>k")
+    vim.keymap.set("v", "<Left>", "<Esc>h")
+    vim.keymap.set("v", "<Right>", "<Esc>l")
+    vim.keymap.set("v", "<Down>", "<Esc>j")
     vim.keymap.set("v", "<S-Up>", "k")
     vim.keymap.set("v", "<S-Down>", "j")
     vim.keymap.set("v", "<S-Left>", "h")
@@ -47,6 +62,9 @@ function M.bind()
     vim.keymap.set("v", "<C-Left>", "b")
     vim.keymap.set("v", "<BS>", '"_di', { silent = true })
     vim.keymap.set("v", "<Del>", '"_di', { silent = true })
+    vim.keymap.set("n", "<C-l>", "0v$", { desc = "Select whole line" })
+    vim.keymap.set("i", "<C-l>", "<Esc>0v$", { desc = "Select whole line" })
+    vim.keymap.set("v", "<C-l>", "<Esc>0v$", { desc = "Select whole line" })
 
     -- Executions
     vim.keymap.set({ "i", "n" }, "<C-S-r>", "<cmd>source %<CR>")
@@ -57,10 +75,14 @@ function M.bind()
     vim.keymap.set("i", "<C-a>", utils.jump_to_start, { noremap = true, silent = true })
     vim.keymap.set("i", "<C-e>", utils.jump_to_end, { noremap = true, silent = true })
     vim.keymap.set("n", "<C-e>", utils.jumpt_to_end_into_insert, { noremap = true, silent = true })
+    vim.keymap.set("v", "<C-e>", "<Esc>0i", { noremap = true, silent = true })
+    vim.keymap.set("v", "<C-a>", "<Esc>$i", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-a>", utils.jumpt_to_start_into_insert, { noremap = true, silent = true })
     vim.keymap.set("n", "<C-S-o>", "<C-i>", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-M-Left>", "<C-o>", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-M-Right>", "<C-i>", { noremap = true, silent = true })
+    vim.keymap.set("i", "<C-M-Left>", "<C-o><C-o>", { noremap = true, silent = true })
+    vim.keymap.set("i", "<C-M-Right>", "<C-o><C-i>", { noremap = true, silent = true })
     vim.keymap.set({ "n", "i", "v" }, "<C-Up>", function()
         utils.jump_x_up(CTRL_JUMP_VERTICAL_LENGTH)
     end)
@@ -69,6 +91,19 @@ function M.bind()
     end)
     vim.keymap.set("i", "<Left>", utils.move_left_across_lines, { noremap = true, silent = true })
     vim.keymap.set("i", "<Right>", utils.move_right_across_lines, { noremap = true, silent = true })
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+    local function declaration_or_definition()
+        local bufnr = vim.api.nvim_get_current_buf()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+            if client.server_capabilities.declarationProvider then
+                return vim.lsp.buf.declaration()
+            end
+        end
+        vim.lsp.buf.definition()
+    end
+
+    vim.keymap.set({ "n", "i" }, "<C-b>", require("telescope.builtin").lsp_references)
+    vim.keymap.set({ "n", "i" }, "<C-M-b>", declaration_or_definition)
 
     -- Find
     vim.keymap.set({ "n", "i" }, "<C-f>", utils.find, { noremap = true, silent = true, desc = "Find" })
@@ -76,7 +111,7 @@ function M.bind()
 
     ---- Manipulations
     -------------------------------------------------------------------
-    -- Wrap selection
+    -- Wrap
     for _, pair in ipairs({
         { '"', '"' },
         { "'", "'" },
@@ -86,9 +121,11 @@ function M.bind()
     }) do
         local wrapSelectionCommand = '<Esc>`>i' .. pair[2] .. '<Esc>`<i' .. pair[1]
         vim.keymap.set("v", pair[1], wrapSelectionCommand .. "<Esc>`>li", { desc = "Wrap selection" })
+        local wrapCompletionCommand = pair[1] .. pair[2] .. '<Left>'
+        vim.keymap.set("i", pair[1], wrapCompletionCommand)
     end
-    --    vim.keymap.set("v", '"', '<Esc>`>i"<Esc>`<i"', { desc = "Wrap selection in quotes" })
-    -- Reverse tab
+
+   -- Reverse tab
     vim.keymap.set("n", "<S-Tab>", "<<i")
     vim.keymap.set("i", "<S-Tab>", "<C-D>")
     vim.keymap.set("v", "<S-Tab>", "<i")
@@ -113,15 +150,6 @@ function M.bind()
 
     -- Other Functionalities
     -----------------------------------------------------------
-    -- Ctrl+Shift+R = Reload configuration
-
-    -- Comeback to insert
-    local pairs = { "{", "}", "[", "]", "(", ")", "<", ">", "!", "#", "-", ",", ";", "'" }
-    for _, char in ipairs(pairs) do
-        vim.keymap.set("n", char, "i" .. char)
-    end
-    vim.keymap.set("n", "<CR>", "i<CR>")
-    vim.keymap.set("n", "<BS>", "i<BS>")
 
     vim.keymap.set("i", "<C-s>", function()
         utils.save()
@@ -135,9 +163,6 @@ function M.bind()
     vim.keymap.set("i", "<C-S-z>", "<C-o><C-r>", { silent = true })
     vim.keymap.set("i", "<C-v>", "<C-r>+", { silent = true })
     vim.keymap.set("i", "<C-c>", "<C-o>yy", { silent = true })
-
-    -- rename current file
-    vim.keymap.set({ "n", "i" }, "<S-F2>", ":file ", { silent = false })
 
     -- Ctrl+Shift+Enter = terminal
     vim.keymap.set({ "n", "i" }, "<C-S-CR>", "<Esc>:split | terminal<CR>", { silent = true })

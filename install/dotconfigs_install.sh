@@ -59,6 +59,14 @@ sudo cp $daluai_dotconfigs_folder/nano/nanorc-nolinenumbers /root/.config/nano/n
 cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc "$HOME"/.config/nano/syntax/
 sudo cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc /root/.config/nano/syntax/
 
+# Kitty
+if [ ! -d "$HOME/.config/kitty" ]; then
+    echo "Installing kitty config"
+    cp -r $daluai_dotconfigs_folder/kitty ~/.config/
+else
+    echo "Found kitty config at '$HOME/.config/kitty', skipping its installation"
+fi
+
 # NEOVIM
 if [ ! -d "$HOME/.config/nvim" ]; then
     echo "Installing neovim config"

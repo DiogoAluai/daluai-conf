@@ -156,7 +156,10 @@ end
 function M.telescope_find_files_in_config()
     telescope_builtin.find_files(telescope_themes.get_dropdown {
         previewer = false,
-        cwd = vim.fn.stdpath("config")
+        search_dirs = {
+            "/home/daluai/.config/kitty",
+            vim.fn.stdpath("config")
+        }
     })
 end
 
