@@ -1,32 +1,35 @@
 #!/usr/bin/env bash
 
+set -e
+
 original_dir="$(pwd)"
 
 if [[ "$(basename "$original_dir")" != "daluai-conf" ]]; then
     cd ..
     if [[ "$(basename "$(pwd)")" != "daluai-conf" ]]; then
       echo "Error: Cannot run script from this directory" >&2
+      cd -
       exit 1
     fi
 fi
 
-source $HOME/.bash_envs # get internal env variables
+source "$HOME"/.bash_envs # get internal env variables
 
 echo "Installing scripts..."
 for script in scripts/bin/*; do
     if [ -f "$script" ]; then
-        chmod +x $script
+        chmod +x "$script"
         echo "- $script"
         script_name=$(basename "$script")
-        sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.sh}
+        sudo cp "$script" "$DALUAI_CONF_INSTALL_LOCATION"/"${script_name%.sh}"
     fi
 done
 
 for script in scripts/bin/python/*; do
-    chmod +x $script
+    chmod +x "$script"
     echo "- $script"
     script_name=$(basename "$script")
-    sudo cp $script $DALUAI_CONF_INSTALL_LOCATION/${script_name%.py}
+    sudo cp "$script" "$DALUAI_CONF_INSTALL_LOCATION"/"${script_name%.py}"
 done
 
 echo ""

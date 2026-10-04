@@ -1,12 +1,6 @@
-
-
 -----------------------------------------------------------
 -- CUA-style / non-modal Neovim
 -----------------------------------------------------------
-
---asd = nil
---asd.();
-
 
 -- Debug mode
 if vim.env.NVIM_DEBUUG == "true" then
@@ -20,28 +14,53 @@ end
 require("config.lazy")
 require("bindings").bind()
 
--- Example Treesitter query:
--- vim.cmd("hi @function.builtin guifg=orange")
--- :InspectTree to check the tree
+
+-- Dynamic diagnostics in insert mode
+--  it's also possible to turn it on and off manually. todo: provide bigger buffer before diagnostics
+--asd = nil
+--asd.();
+vim.diagnostic.config({
+    update_in_insert = true,
+    virtual_text = true,
+    signs = true,
+    underline = true,
+})
+
+
+vim.api.nvim_set_hl(0, "CursorNormal", {
+  fg = "#1e1e2e",
+  bg = "#89b4fa",
+})
+
+vim.api.nvim_set_hl(0, "CursorInsert", {
+  fg = "#1e1e2e",
+  bg = "#a6e3a1",
+})
+
+vim.api.nvim_set_hl(0, "CursorVisual", {
+  fg = "#1e1e2e",
+  bg = "#f9e2af",
+})
+
 
 -----------------------------------------------------------
 -- Automatically return to Insert mode when opening a file
 -----------------------------------------------------------
 
-vim.api.nvim_create_autocmd("BufEnter", {
-    callback = function()
-        if vim.bo.buftype == "" then
-            vim.cmd("startinsert")
-        end
-    end,
-})
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--     callback = function()
+--         if vim.bo.buftype == "" then
+--             vim.cmd("startinsert")
+--         end
+--     end,
+-- })
 
 -----------------------------------------------------------
 -- Start in Insert mode
 -----------------------------------------------------------
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        vim.cmd("startinsert")
-    end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--     callback = function()
+--         vim.cmd("startinsert")
+--     end,
+-- })

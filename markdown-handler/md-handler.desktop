@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Markdown Handler
+Type=Application
+Exec=<MD_HANDLER_LOCATION> %f
+MimeType=text/markdown;
+Terminal=false
+NoDisplay=true

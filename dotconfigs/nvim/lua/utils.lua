@@ -1,4 +1,4 @@
-local M = { }
+local M = {}
 
 function M.save()
     vim.cmd("update")
@@ -13,27 +13,26 @@ function M.select_all()
     vim.cmd("normal! ggVG")
 end
 
-
-function execute_str(cmdStr)
-     -- Arguments
-     --     str: The string containing key codes to convert.
-     --     from_part: Expands <lt> and interprets codes as part of a mapping if set to true.
-     --     do_lt: Replaces <lt> with < if set to true.
-     --     special: Interprets special keys/codes like <CR>, <Esc>, and <C-u>.
-     -- "n" means no remaping
-      vim.api.nvim_feedkeys(
-          vim.api.nvim_replace_termcodes(cmdStr, true, false, true),
-              "n", false)
+local function execute_str(cmdStr)
+    -- Arguments
+    --     str: The string containing key codes to convert.
+    --     from_part: Expands <lt> and interprets codes as part of a mapping if set to true.
+    --     do_lt: Replaces <lt> with < if set to true.
+    --     special: Interprets special keys/codes like <CR>, <Esc>, and <C-u>.
+    -- "n" means no remaping
+    vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes(cmdStr, true, false, true),
+        "n", false)
 end
 M.execute_str = execute_str
 
-function jump_to_start()
+local function jump_to_start()
     -- "<C-o> executes something and cames back to insert
     execute_str("<C-o>0")
 end
 M.jump_to_start = jump_to_start
 
-function jump_to_end()
+local function jump_to_end()
     execute_str("<C-o>$")
 end
 M.jump_to_end = jump_to_end
@@ -56,7 +55,7 @@ function M.move_right_across_lines()
         execute_str("<C-o>j") -- down
         execute_str("<C-o>0") -- start
     elseif column == line_end - 1 and line < vim.fn.line("$") then
-        -- in the second to last column, using <C-o>l does not move the caret 
+        -- in the second to last column, using <C-o>l does not move the caret
         jump_to_end()
     else
         vim.cmd("normal! l")
@@ -77,7 +76,6 @@ function M.jump_x_up(x)
     vim.cmd("normal! " .. x .. "k")
 end
 
-
 function M.jump_x_down(x)
     vim.cmd("normal! " .. x .. "j")
 end
@@ -93,7 +91,7 @@ function number_of_loaded_buffers()
 
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if vim.api.nvim_buf_is_loaded(buf) then
-         count = count + 1
+            count = count + 1
         end
     end
 
@@ -101,7 +99,6 @@ function number_of_loaded_buffers()
 end
 
 function M.quit_if_saved()
-
     if vim.bo.modified then
         vim.notify("Unsaved changes")
     else
@@ -144,24 +141,36 @@ function M.comment_out_current_line()
     local current_line = vim.api.nvim_get_current_line()
     vim.api.nvim_set_current_line(comment_prefix .. current_line)
     local current_win = vim.api.nvim_get_current_win()
-    vim.api.nvim_win_set_cursor(current_win, { current_row, new_col_location})
+    vim.api.nvim_win_set_cursor(current_win, { current_row, new_col_location })
 end
 
 local telescope_builtin = require('telescope.builtin')
 local telescope_themes = require('telescope.themes')
 
 function M.telescope_find_files()
-    telescope_builtin.find_files(telescope_themes.get_dropdown{
+    telescope_builtin.find_files(telescope_themes.get_dropdown {
         previewer = false
+    })
+end
+
+function M.telescope_find_files_in_config()
+    telescope_builtin.find_files(telescope_themes.get_dropdown {
+        previewer = false,
+        cwd = vim.fn.stdpath("config")
     })
 end
 
 function M.telescope_find_all()
     telescope_builtin.live_grep({
-        grep_open_files = trie
+        grep_open_files = false, -- this would only find on current open files
     })
 end
 
+function M.telescope_find_all_in_config()
+    telescope_builtin.live_grep({
+        cwd = vim.fn.stdpath("config"),
+    })
+end
 
 -- Find docs for lua libraries and functions
 function M.telescope_live_help()

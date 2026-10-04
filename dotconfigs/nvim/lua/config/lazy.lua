@@ -21,6 +21,13 @@ vim.opt.rtp:prepend(lazypath)
 -- loading lazy.nvim so that mappings are correct.
 -- This is also a good place to setup other settings (vim.opt)
 
+vim.opt.selection = "exclusive"
+vim.opt.virtualedit = "onemore"
+vim.opt.guicursor = {
+    "n:ver25",
+    "i:ver25",
+    "v:ver25"
+}
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 

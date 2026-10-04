@@ -1,13 +1,5 @@
-
-
 # ########## daluai-conf #########
 # ############# BEGIN ############
-
-# This file is meant to be sourced by .bashrc.
-
-# Export envs here, example:
-# export JAVA_HOME="/etc/somewhere"
-
 
 ### internal to daluai-conf
 export DALUAI_CONF_INSTALL_LOCATION="/usr/local/bin"

@@ -13,11 +13,12 @@ fi
 
 
 install/dotconfigs_install.sh || exit 1  # installed to user and root dotconfig
-install/bashconfig_install.sh      # location specified in bash_envs: HOME environment variable
-source $HOME/.bashrc # get internal env variables
-install/templates_install.sh       # location specified in bash_envs: DALUAI_CONF_TEMPLATES_LOCATION
-install/scripts_install.sh         # location specified in bash_envs: DALUAI_CONF_INSTALL_LOCATION
-source $HOME/.bashrc # update aliases for current session
+install/bashconfig_install.sh
+source "$HOME"/.bashrc # unsure if this is needed
+install/templates_install.sh
+install/scripts_install.sh
+install/markdown_handler_install.sh
+source "$HOME"/.bashrc # this likely does nothing
 
 echo ""
 echo "Done"
