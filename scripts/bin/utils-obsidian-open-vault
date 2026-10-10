@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+##
+## Open a specific vault in obsidian 
+## obsidian cli lacks in this functionality if an obsidian instance is not running already
+##
+
+
+# Check arguments
+if [ $# -lt 1 ]; then
+    echo "Usage: $(basename "$0") <vault name>"
+    exit 1
+fi
+
+type obsidian >/dev/null 2>&1 || {
+  echo "Command 'obsidian' not found"
+  exit 1
+}
+
+vault_name="$1"
+
+obsidian "obsidian://open?vault=$vault_name"
+ 
+
