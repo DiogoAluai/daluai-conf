@@ -1,6 +1,9 @@
 # ########## daluai-conf #########
 # ############# BEGIN ############
 
+# stronger clear, to work in other terminals such as kitty
+alias clear="printf '\033[2J\033[3J\033[1;1H'"
+
 # utils
 alias ltr="ls -ltr"
 alias ll="ls -AlF"
@@ -34,6 +37,7 @@ alias balias="bal"
 alias bra="bal"
 alias benv="nvim $HOME/.bash_envs"
 alias bre="benv"
+alias bprompt="nvim $HOME/.bash_prompt"
 
 # ########## daluai-conf #########
 # ############## END #############
