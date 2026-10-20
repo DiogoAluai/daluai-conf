@@ -7,6 +7,7 @@ alias ll="ls -AlF"
 alias la="ls -A"
 alias l="ls -CF"
 alias o="xdg-open"
+alias env="(env | sed 's/=/ = /g')" # make env print extra spaces for easier copy paste
 alias wh="which"
 alias where="type"     # "type" is amazing, it tells you more than "which". Let's not override "which" because some scripts may use it
 alias calculator="bc"
@@ -21,7 +22,6 @@ alias vnd="NVIM_DEBUUG=true nvim"
 alias spgt="sgpt"
 
 alias wifils="nmcli device wifi list"  # cool wifi list
-alias rcwifi="nmcli device wifi connect $(nmcli device wifi list | grep "*" | awk '{print $3}')"
 
 # scripts
 alias script_build="build_script"

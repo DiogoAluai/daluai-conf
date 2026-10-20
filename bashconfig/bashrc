@@ -13,6 +13,11 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
+# Bash prompt.
+if [ -f ~/.bash_prompt ]; then
+    . ~/.bash_prompt
+fi
+
 # ########## daluai-conf #########
 # ############## END #############
 

@@ -63,6 +63,7 @@ sudo cp $daluai_dotconfigs_folder/nano/syntax/*.nanorc /root/.config/nano/syntax
 if [ ! -d "$HOME/.config/kitty" ]; then
     echo "Installing kitty config"
     echo "[INFO] To set kitty as default: \`sudo update-alternatives --config x-terminal-emulator\`"
+    echo "[INFO] Check and uncomment themes in '~/.config/kitty/kitty.conf'"
     cp -r $daluai_dotconfigs_folder/kitty ~/.config/
 else
     echo "Found kitty config at '$HOME/.config/kitty', skipping its installation"

@@ -20,6 +20,13 @@ echo "Updating .bash files..."
 cat $daluai_bashconfig_folder/bash_aliases >> "$HOME/.bash_aliases"
 cat $daluai_bashconfig_folder/bashrc >> "$HOME/.bashrc"
 cat $daluai_bashconfig_folder/bash_envs >> "$HOME/.bash_envs"
+if [ -f ~/.bash_prompt ]; then
+    echo "Found '~/.bash_prompt', skipping prompt installation"
+else
+    cp $daluai_bashconfig_folder/bash_prompt ~/.bash_prompt
+fi
+
 echo ""
 
-cd "$original_dir" || exit
+cd "$original_dir"
+

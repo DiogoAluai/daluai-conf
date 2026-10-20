@@ -1,0 +1,45 @@
+# Blood Moon prompt (pure bash, truecolor)
+#
+#   ╭─ user@host  ~/path   branch ✱
+#   ╰─❯
+#
+# The arrow turns red and shows the exit code when the last command failed.
+
+__bm_c() { printf '\[\e[38;2;%s;%s;%sm\]' "$1" "$2" "$3"; }
+
+__bm_prompt() {
+    local code=$?
+    local reset='\[\e[0m\]'
+    local dim crimson magenta cyan amber
+    dim=$(__bm_c 138 84 98)
+    crimson=$(__bm_c 255 42 77)
+    magenta=$(__bm_c 255 46 151)
+    cyan=$(__bm_c 45 226 230)
+    amber=$(__bm_c 255 179 71)
+
+    # git branch + dirty marker
+#    local git=''
+#    local branch
+#     branch=$(git symbolic-ref --short -q HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+#     if [ -n "$branch" ]; then
+#         git=" ${magenta} ${branch}"
+#         [ -n "$(git status --porcelain -uno 2>/dev/null | head -c1)" ] && git+=" ${amber}✱"
+#     fi
+
+    # exit status
+    local arrow="${crimson}❯"
+    local status=''
+    if [ "$code" -ne 0 ]; then
+        status=" ${crimson}✘ ${code}"
+    fi
+
+    local chroot="${debian_chroot:+($debian_chroot) }"
+    local title='\[\e]0;\u@\h: \w\a\]'
+
+    PS1="${title}\n${dim}╭─ ${chroot}${crimson}\u${dim}@${cyan}\h ${dim}${amber}\w${git}${status}${reset}\n${dim}╰─${arrow}${reset} "
+}
+
+case ";${PROMPT_COMMAND};" in
+    *";__bm_prompt;"*) ;;
+    *) PROMPT_COMMAND="__bm_prompt${PROMPT_COMMAND:+;$PROMPT_COMMAND}" ;;
+esac
