@@ -6,6 +6,21 @@ local M = {}
 local CTRL_JUMP_VERTICAL_LENGTH = 5
 
 function M.bind()
+    for _, key in ipairs({ "<MiddleMouse>", "<2-MiddleMouse>", "<3-MiddleMouse>", "<4-MiddleMouse>" }) do
+        vim.keymap.set({ "n", "i", "v", "c", "t" }, key, "<Nop>")
+    end
+
+    vim.keymap.set({ 'n', 'i' }, '<C-S-l>', function()
+        local buf = { bufnr = 0 }
+        vim.diagnostic.enable(not vim.diagnostic.is_enabled(buf), buf)
+    end)
+
+    ---- Insertion
+    ---------------------------------------------------------------
+    vim.keymap.set("n", "a", "i")
+    vim.keymap.set("v", "a", "<Esc>i")
+    vim.keymap.set("v", "i", "<Esc>i")
+
     ---- Navigation
     ---------------------------------------------------------------
     --Telescope
@@ -80,6 +95,7 @@ function M.bind()
     vim.keymap.set("n", "<C-a>", utils.jumpt_to_start_into_insert, { noremap = true, silent = true })
     vim.keymap.set("n", "<C-S-o>", "<C-i>", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-M-Left>", "<C-o>", { noremap = true, silent = true })
+    vim.keymap.set("n", "<C-S-BS>", "<C-o>")
     vim.keymap.set("n", "<C-M-Right>", "<C-i>", { noremap = true, silent = true })
     vim.keymap.set("i", "<C-M-Left>", "<C-o><C-o>", { noremap = true, silent = true })
     vim.keymap.set("i", "<C-M-Right>", "<C-o><C-i>", { noremap = true, silent = true })
@@ -109,23 +125,63 @@ function M.bind()
     vim.keymap.set({ "n", "i" }, "<C-f>", utils.find, { noremap = true, silent = true, desc = "Find" })
     vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>") -- no highlighting
 
+    local function handle_command_escape()
+        local type = vim.fn.getcmdtype()
+        if type == '/' or type == '?' then
+            return '<CR>'
+        end
+        return '<C-c>'
+    end
+    vim.keymap.set("c", "<Esc>", handle_command_escape, { expr = true }) -- Escape doesn't jump around
+
     ---- Manipulations
     -------------------------------------------------------------------
     -- Wrap
+    local function prev_char()
+        local col = vim.fn.col(".")
+        return vim.fn.getline("."):sub(col - 1, col - 1)
+    end
+
+    local function next_char()
+        local col = vim.fn.col(".")
+        return vim.fn.getline("."):sub(col, col)
+    end
+
     for _, pair in ipairs({
         { '"', '"' },
         { "'", "'" },
         { "(", ")" },
         { "[", "]" },
-        { "{", "}" }
+        { "{", "}" },
     }) do
+        local open, close = pair[1], pair[2]
+
+        -- Visual: wrap selection
         local wrapSelectionCommand = '<Esc>`>i' .. pair[2] .. '<Esc>`<i' .. pair[1]
         vim.keymap.set("v", pair[1], wrapSelectionCommand .. "<Esc>`>li", { desc = "Wrap selection" })
-        local wrapCompletionCommand = pair[1] .. pair[2] .. '<Left>'
-        vim.keymap.set("i", pair[1], wrapCompletionCommand)
+
+        if open == close then
+            -- Quotes: skip over if the next char is already the quote, else insert a pair
+            vim.keymap.set("i", open, function()
+                if next_char() == close then
+                    return "<Right>"
+                end
+                if open == "'" and prev_char():match("%w") then
+                    return open
+                end
+                return open .. close .. "<Left>"
+            end, { expr = true })
+        else
+            -- Brackets: opening always inserts a pair
+            vim.keymap.set("i", open, open .. close .. "<Left>")
+            -- Closing: skip over if it's already there
+            vim.keymap.set("i", close, function()
+                return next_char() == close and "<Right>" or close
+            end, { expr = true })
+        end
     end
 
-   -- Reverse tab
+    -- Reverse tab
     vim.keymap.set("n", "<S-Tab>", "<<i")
     vim.keymap.set("i", "<S-Tab>", "<C-D>")
     vim.keymap.set("v", "<S-Tab>", "<i")
@@ -138,12 +194,17 @@ function M.bind()
     vim.keymap.set("i", "<C-S-Down>", "<C-O>:m .+1<CR>")
     -- Duplicate
     vim.keymap.set("n", "<C-d>", ":t.<CR>", { noremap = true, silent = true })
-    vim.keymap.set("v", "<C-d>", '"+y`>"+p`]', { noremap = true, silent = true })
+    vim.keymap.set("v", "<C-d>", '"zy`>"zp`]', { noremap = true, silent = true })
     vim.keymap.set("i", "<C-d>", "<C-O>:t.<CR>", { noremap = true, silent = true })
     -- Comment
     vim.keymap.set({ "i", "n" }, "<C-S-7>", utils.comment_out_current_line, { noremap = true, silent = true })
     -- Format current buffer
-    vim.keymap.set({ "n", "v", "i" }, "<C-M-l>", vim.lsp.buf.format, { desc = "Format" })
+    vim.keymap.set({ "n", "v", "i" }, "<C-M-o>", utils.ruff_organize_imports_if_py, { desc = "Format" })
+    vim.keymap.set({ "n", "v", "i" }, "<C-M-l>", function()
+            vim.lsp.buf.format()
+            utils.ruff_organize_imports_if_py(false)
+        end,
+        { desc = "Format" })
 
     ---- Settings
     -----------------------------------------------------------------
@@ -152,6 +213,7 @@ function M.bind()
     -----------------------------------------------------------
 
     vim.keymap.set("i", "<C-s>", function()
+        vim.cmd("stopinsert")
         utils.save()
     end, { silent = true })
 
@@ -190,7 +252,7 @@ function M.bind()
     vim.keymap.set("n", "<C-v>", '"+p`]l', { silent = true })
     vim.keymap.set("n", "<C-z>", "u", { silent = true })
     vim.keymap.set("n", "<C-S-z>", "<C-r>", { silent = true })
-    vim.keymap.set("n", "<C-q>", utils.save_and_exit, { silent = true })
+    vim.keymap.set({ "n", "i" }, "<C-q>", utils.force_exit, { silent = true })
 
     vim.keymap.set("v", "<C-c>", '"+y`>', { silent = true })
     vim.keymap.set("v", "<C-x>", '"+d', { silent = true })
@@ -213,7 +275,8 @@ function M.bind()
     -----------------------------------------------------------
     vim.keymap.set("n", "<C-BS>", "i<C-w>", { silent = true })
     vim.keymap.set("i", "<C-BS>", "<C-w>", { silent = true })
-    vim.keymap.set("i", "<C-Del>", "<C-o>dw", { silent = true })
+    vim.keymap.set("i", "<C-Del>", '<C-o>"_dw', { silent = true })
+    vim.keymap.set("n", "<C-Del>", '"_dw', { silent = true })
 end
 
 return M

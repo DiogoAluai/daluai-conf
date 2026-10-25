@@ -1,5 +1,12 @@
 return {
     {
+        "jake-stewart/multicursor.nvim",
+        branch = "1.0",
+        config = function()
+            require("multicursor-nvim").setup()
+        end,
+    },
+    {
         "nvim-tree/nvim-web-devicons",
         config = function()
             require("nvim-web-devicons").setup()
@@ -37,17 +44,17 @@ return {
                 -- * keyword: highlights of the keyword
                 -- * after: highlights after the keyword (todo text)
                 highlight = {
-                    multiline = false,           -- enable multine todo comments
-                    multiline_pattern = "^.",    -- lua pattern to match the next multiline from the start of the matched keyword
-                    multiline_context = 10,      -- extra lines that will be re-evaluated when changing a line
-                    before = "",                 -- "fg" or "bg" or empty
-                    keyword = "bg",              -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
-                    after = "fg",                -- "fg" or "bg" or empty
+                    multiline = false,             -- enable multine todo comments
+                    multiline_pattern = "^.",      -- lua pattern to match the next multiline from the start of the matched keyword
+                    multiline_context = 10,        -- extra lines that will be re-evaluated when changing a line
+                    before = "",                   -- "fg" or "bg" or empty
+                    keyword = "bg",                -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty. (wide and wide_bg is the same as bg, but will also highlight surrounding characters, wide_fg acts accordingly but with fg)
+                    after = "fg",                  -- "fg" or "bg" or empty
                     pattern = [[.*<(KEYWORDS):?]], -- pattern or table of patterns, used for highlighting (vim regex). Time sinker, this regex. Wish I could make 'todo' not highlighting
-                    comments_only = true,        -- uses treesitter to match keywords in comments only
-                    max_line_len = 300,          -- ignore lines longer than this
-                    exclude = {},                -- list of file types to exclude highlighting
-           },
+                    comments_only = true,          -- uses treesitter to match keywords in comments only
+                    max_line_len = 300,            -- ignore lines longer than this
+                    exclude = {},                  -- list of file types to exclude highlighting
+                },
                 -- list of named colors where we try to extract the guifg from the
                 -- list of highlight groups or use the hex color if hl not found as a fallback
                 colors = {
@@ -514,8 +521,8 @@ return {
             })
             vim.lsp.config("bashls", {
                 cmd = {
-                    "/home/daluai/.nvm/versions/node/v22.16.0/bin/node",
-                    "/home/daluai/.nvm/versions/node/v22.16.0/bin/bash-language-server",
+                    vim.env.HOME .. "/.nvm/versions/node/v22.23.4/bin/node",
+                    vim.env.HOME .. "/.nvm/versions/node/v22.23.4/bin/bash-language-server",
                     "start",
                 }
             })
@@ -525,5 +532,16 @@ return {
             vim.lsp.enable("bashls")
         end
     },
-
+    {
+        -- for require("... completion checkout suggestion at: https://github.com/folke/lazydev.nvim
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                --{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
 }

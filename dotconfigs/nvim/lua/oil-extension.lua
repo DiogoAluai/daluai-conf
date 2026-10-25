@@ -1,4 +1,3 @@
-local M = {}
 
 local oil_win, prev_win
 
@@ -49,5 +48,5 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.keymap.set({ "v", "i", "n" }, "<C-n>", require("oil").open)
-vim.keymap.set("n", "<C-o>", toggle_oil_sidebar, { desc = "Oil sidebar" })
+vim.keymap.set({"n", "i"}, "<C-o>", toggle_oil_sidebar, { desc = "Oil sidebar" })
 

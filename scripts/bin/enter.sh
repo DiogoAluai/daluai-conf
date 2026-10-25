@@ -14,11 +14,11 @@ fi
 CONTAINER_NAME_OR_ID=$1
 
 # Check if the specified container is running
-if ! sudo docker ps | grep -q $CONTAINER_NAME_OR_ID; then
+if ! sudo docker ps | grep -q "$CONTAINER_NAME_OR_ID"; then
   echo "Container '$CONTAINER_NAME_OR_ID' is not running."
   echo "Starting container"
-  sudo docker start $CONTAINER_NAME_OR_ID
+  sudo docker start "$CONTAINER_NAME_OR_ID"
 fi
 
 # Enter the shell of the Docker container
-sudo docker exec -it $CONTAINER_NAME_OR_ID /bin/bash
+sudo docker exec -it "$CONTAINER_NAME_OR_ID" /bin/bash

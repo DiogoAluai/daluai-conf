@@ -26,5 +26,6 @@ vim.diagnostic.config({
 
 
 require("oil-extension")
+require("multiline")
 
 

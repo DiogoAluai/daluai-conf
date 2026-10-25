@@ -9,6 +9,10 @@ function M.save_and_exit()
     vim.cmd("quit")
 end
 
+function M.force_exit()
+    vim.cmd("quitall!")
+end
+
 function M.select_all()
     vim.cmd("normal! ggVG")
 end
@@ -178,6 +182,68 @@ end
 -- Find docs for lua libraries and functions
 function M.telescope_live_help()
     telescope_builtin.help_tags()
+end
+
+local function is_py_buffer(bufnr)
+    return vim.api.nvim_buf_get_name(bufnr or 0):match("%.py$") ~= nil
+end
+
+---@param showWarning? boolean
+function M.ruff_organize_imports_if_py(showWarning)
+    if showWarning == nil then
+        showWarning = true
+    end
+    if vim.fn.executable("ruff") == 0 then
+        vim.notify("ruff not found in PATH", vim.log.levels.ERROR)
+        return
+    end
+    if not is_py_buffer() then
+        if showWarning then
+            vim.notify("Import optimization is only available for .py files", vim.log.levels.WARN)
+        end
+        return
+    end
+
+
+    local bufnr = vim.api.nvim_get_current_buf()
+    local path = vim.api.nvim_buf_get_name(bufnr)
+    if path == "" then
+        return
+    end
+
+    local input = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n") .. "\n"
+
+    local result = vim.system({
+        "ruff", "check",
+        "--select", "I",
+        "--fix",
+        "--exit-zero",
+        "--quiet",
+        "--stdin-filename", path,
+        "-",
+    }, {
+        stdin = input,
+        cwd = vim.fs.dirname(path),
+        text = true,
+    }):wait()
+
+    if result.code ~= 0 then
+        vim.notify("ruff failed:\n" .. (result.stderr or ""), vim.log.levels.ERROR)
+        return
+    end
+
+    if result.stdout == input then
+        return -- already sorted
+    end
+
+    local lines = vim.split(result.stdout, "\n", { plain = true })
+    if lines[#lines] == "" then
+        table.remove(lines)
+    end
+
+    local view = vim.fn.winsaveview()
+    vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+    vim.fn.winrestview(view)
 end
 
 return M
