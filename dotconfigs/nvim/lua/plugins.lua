@@ -13,6 +13,13 @@ return {
         end
     },
     {
+        "ThePrimeagen/refactoring.nvim",
+        dependencies = { "lewis6991/async.nvim" },
+        config = function()
+            require("refactoring").setup()
+        end,
+    },
+    {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
@@ -382,90 +389,36 @@ return {
         lazy = false,
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter").setup({
-                ensure_installed = {
-                    "bash",
-                    "c",
-                    "diff",
-                    "html",
-                    "javascript",
-                    "java",
-                    "json",
-                    "lua",
-                    "markdown",
-                    "markdown_inline",
-                    "python",
-                    "query",
-                    "regex",
-                    "toml",
-                    "tsx",
-                    "typescript",
-                    "vim",
-                    "vimdoc",
-                    "xml",
-                    "yaml",
-                },
-                auto_install = true,
-                highlight = {
-                    enable = true,
-                    disable = function(lang, buf)
-                        local max_filesize = 100 * 1024 -- 100 KB
-                        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                        if ok and stats and stats.size > max_filesize then
-                            return true
-                        end
-                    end
-                }
+            require("nvim-treesitter").install({
+                "bash", "c", "diff", "html", "javascript", "java", "json", "lua",
+                "markdown", "markdown_inline", "python", "query", "regex", "toml",
+                "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
             })
-        end
+
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(args)
+                    local stats = vim.uv.fs_stat(vim.api.nvim_buf_get_name(args.buf))
+                    if stats and stats.size > 100 * 1024 then
+                        return
+                    end
+                    pcall(vim.treesitter.start, args.buf)
+                end,
+            })
+        end,
     },
     {
         -- :help lspconfig-all
+        -- check for available lsps also at: https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
         "neovim/nvim-lspconfig",
         enabled = true,
         config = function()
             vim.lsp.config('lua_ls', {
-                on_init = function(client)
-                    if client.workspace_folders then
-                        local path = client.workspace_folders[1].name
-                        if
-                            path ~= vim.fn.stdpath('config')
-                            and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
-                        then
-                            return
-                        end
-                    end
-
-                    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-                        runtime = {
-                            -- Tell the language server which version of Lua you're using (most
-                            -- likely LuaJIT in the case of Neovim)
-                            version = 'LuaJIT',
-                            -- Tell the language server how to find Lua modules same way as Neovim
-                            -- (see `:h lua-module-load`)
-                            path = {
-                                'lua/?.lua',
-                                'lua/?/init.lua',
-                            },
-                        },
-                        -- Make the server aware of Neovim runtime files
-                        workspace = {
-                            checkThirdParty = false,
-                            library = {
-                                vim.env.VIMRUNTIME,
-                                -- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
-                                vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
-                            },
-                            -- Or pull in all of 'runtimepath'.
-                            -- NOTE: this is a lot slower and will cause issues when working on
-                            -- your own configuration.
-                            -- See https://github.com/neovim/nvim-lspconfig/issues/3189
-                            -- library = vim.api.nvim_get_runtime_file('', true),
-                        },
-                    })
-                end,
                 settings = {
-                    Lua = {},
+                    Lua = {
+                        runtime = { version = 'LuaJIT' },
+                        diagnostics = { globals = { 'vim' } },
+                        workspace = { checkThirdParty = false },
+                    },
                 },
             })
             vim.lsp.config("ruff", {
@@ -485,21 +438,21 @@ return {
                         diagnosticSeverityOverrides = {
                             -- Covered by Ruff's default F rules:
                             -- https://docs.basedpyright.com/latest/configuration/config-files/
-                            --                            reportUnusedImport = "none",              -- F401
-                            --                            reportUnusedVariable = "none",            -- F841
-                            --                            reportDuplicateImport = "none",           -- F811
-                            --                            reportWildcardImportFromLibrary = "none", -- F403/F405
-                            --                            reportUndefinedVariable = "none",         -- F821
-                            --                            reportAssertAlwaysTrue = "none",  -- F631
-                            --                            reportUnsupportedDunderAll = "none", -- F822 (partial)
+                            --  reportUnusedImport = "none",              -- F401
+                            --  reportUnusedVariable = "none",            -- F841
+                            --  reportDuplicateImport = "none",           -- F811
+                            --  reportWildcardImportFromLibrary = "none", -- F403/F405
+                            --  reportUndefinedVariable = "none",         -- F821
+                            --  reportAssertAlwaysTrue = "none",  -- F631
+                            --  reportUnsupportedDunderAll = "none", -- F822 (partial)
 
                             -- Only if you've enabled the matching Ruff rules:
-                            -- reportInvalidStringEscapeSequence = "none", -- W605
-                            -- reportUnusedExpression = "none",            -- B018
-                            -- reportSelfClsParameterName = "none",        -- N804/N805
-                            -- reportImplicitStringConcatenation = "none", -- ISC
-                            -- reportUnusedParameter = "none",             -- ARG
-                            -- reportPrivateUsage = "none",                -- SLF001
+                            --  reportInvalidStringEscapeSequence = "none", -- W605
+                            --  reportUnusedExpression = "none",            -- B018
+                            --  reportSelfClsParameterName = "none",        -- N804/N805
+                            --  reportImplicitStringConcatenation = "none", -- ISC
+                            --  reportUnusedParameter = "none",             -- ARG
+                            --  reportPrivateUsage = "none",                -- SLF001
                         },
                     },
                 },
@@ -540,8 +493,64 @@ return {
             library = {
                 -- See the configuration section for more details
                 -- Load luvit types when the `vim.uv` word is found
-                --{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
             },
         },
     },
+    {
+        'saghen/blink.cmp',
+        -- capabilities configuration was skipped, because this is neovim version >11
+        -- optional: provides snippets for the snippet source
+        dependencies = { 'rafamadriz/friendly-snippets' },
+
+        -- use a release tag to download pre-built binaries
+        version = '1.*', -- 1 is stable, 2 is not at this time
+        ---@module 'blink.cmp'
+        ---@type blink.cmp.Config
+        opts = {
+            -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+            -- 'super-tab' for mappings similar to vscode (tab to accept)
+            -- 'enter' for enter to accept
+            -- 'none' for no mappings
+            --
+            -- All presets have the following mappings:
+            -- C-space: Open menu or open docs if already open
+            -- C-n/C-p or Up/Down: Select next/previous item
+            -- C-e: Hide menu
+            -- C-k: Toggle signature help (if signature.enabled = true)
+            --
+            -- See :h blink-cmp-config-keymap for defining your own keymap
+            keymap = {
+                preset = 'enter',
+                ["<Esc>"] = { "hide", "fallback" },
+            },
+            appearance = {
+                nerd_font_variant = 'mono'
+            },
+            -- (Default) Only show the documentation popup when manually triggered
+            completion = {
+                list = {
+                    selection = {
+                        auto_insert = false
+                    }
+                },
+                documentation = {
+                    auto_show = true,
+                }
+            },
+            -- Default list of enabled providers defined so that you can extend it
+            -- elsewhere in your config, without redefining it, due to `opts_extend`
+            sources = {
+                default = { 'lsp', 'path', 'snippets', 'buffer' },
+            },
+
+            -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+            -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+            -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+            --
+            -- See the fuzzy documentation for more information
+            fuzzy = { implementation = "prefer_rust_with_warning" }
+        },
+        opts_extend = { "sources.default" }
+    }
 }

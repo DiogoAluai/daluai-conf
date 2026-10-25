@@ -13,6 +13,31 @@ function M.force_exit()
     vim.cmd("quitall!")
 end
 
+local function number_of_listed_buffers()
+    local count = 0
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buflisted then
+            count = count + 1
+        end
+    end
+    return count
+end
+
+function M.quit_if_saved()
+    if vim.bo.modified then
+        vim.notify("Unsaved changes")
+        return
+    end
+    local numberOfBuffers = number_of_listed_buffers()
+    if numberOfBuffers > 1 then
+        vim.notify("Bdeleting")
+        vim.cmd("bdelete")
+    elseif numberOfBuffers == 1 then
+        vim.notify("Quitng")
+        vim.cmd("quit")
+    end
+end
+
 function M.select_all()
     vim.cmd("normal! ggVG")
 end
@@ -50,6 +75,37 @@ function M.move_left_across_lines()
     end
 end
 
+--- Smart "Home" key, IntelliJ-style.
+---
+--- Toggles the cursor between the first non-blank character of the line
+--- and column 0:
+---   * Anywhere in the line      -> first non-blank character
+---   * On first non-blank char   -> column 0
+---   * On column 0               -> first non-blank character
+---
+--- On lines without indentation both targets are column 0.
+--- On whitespace-only lines it toggles between the end of the
+--- indentation and column 0.
+---
+--- Works in both normal and insert mode (no `<C-o>` needed).
+---@return nil
+function M.smart_home()
+    local row, col = unpack(vim.api.nvim_win_get_cursor(0)) -- col is 0-based
+    local line = vim.api.nvim_get_current_line()
+
+    -- 0-based column of the first non-whitespace char (end of line if blank)
+    local first_text = (line:find("%S") or (#line + 1)) - 1
+
+    local target = (col == first_text) and 0 or first_text
+
+    vim.api.nvim_win_set_cursor(0, { row, target })
+end
+
+function M.smart_home_into_insert()
+    M.smart_home()
+    vim.cmd("startinsert")
+end
+
 function M.move_right_across_lines()
     local column = vim.fn.col(".")
     local line = vim.fn.line(".")
@@ -76,12 +132,20 @@ function M.jumpt_to_start_into_insert()
     vim.cmd("startinsert")
 end
 
-function M.jump_x_up(x)
-    vim.cmd("normal! " .. x .. "k")
+function M.jump_x_or_scroll_y_up(x, y)
+    if vim.bo.buftype == "help" then
+        vim.cmd("normal! " .. y .. vim.keycode("<C-y>"))
+    else
+        vim.cmd("normal! " .. x .. "k")
+    end
 end
 
-function M.jump_x_down(x)
-    vim.cmd("normal! " .. x .. "j")
+function M.jump_x_or_scroll_y_down(x, y)
+    if vim.bo.buftype == "help" then
+        vim.cmd("normal! " .. y .. vim.keycode("<C-e>"))
+    else
+        vim.cmd("normal! " .. x .. "j")
+    end
 end
 
 function M.find()
@@ -90,33 +154,36 @@ function M.find()
     execute_str("<Esc>/" .. char)
 end
 
-function number_of_loaded_buffers()
-    local count = 0
-
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-        if vim.api.nvim_buf_is_loaded(buf) then
-            count = count + 1
+-- iteratively clean up clutter
+function M.handle_escape_normal_mode()
+    if vim.v.hlsearch == 1 then
+        vim.cmd("nohlsearch")
+        return
+    end
+    if vim.bo.buftype == "quickfix" then
+        vim.cmd("cclose")
+        return
+    end
+    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].buftype == "quickfix" then
+            vim.api.nvim_set_current_win(win)
+            return
         end
     end
-
-    return count
 end
 
-function M.quit_if_saved()
-    if vim.bo.modified then
-        vim.notify("Unsaved changes")
-    else
-        vim.notify("Quitting")
-        if number_of_loaded_buffers() > 1 then
-            vim.cmd("bdelete")
-        else
-            vim.cmd("quit")
-        end
+-- Escape doesn't jump around, it stays on found
+function M.handle_escape_command_mode()
+    local type = vim.fn.getcmdtype()
+    if type == '/' or type == '?' then
+        return '<CR>'
     end
+    return '<C-c>'
 end
 
 -- Returns file suffix string without the dot
-function get_file_prefix()
+local function get_file_prefix()
     return vim.fn.expand("%:e")
 end
 
@@ -148,7 +215,10 @@ function M.comment_out_current_line()
     vim.api.nvim_win_set_cursor(current_win, { current_row, new_col_location })
 end
 
+-- Telescope
+------
 local telescope_builtin = require('telescope.builtin')
+local telescope_actions = require("telescope.actions")
 local telescope_themes = require('telescope.themes')
 
 function M.telescope_find_files()
@@ -181,13 +251,20 @@ end
 
 -- Find docs for lua libraries and functions
 function M.telescope_live_help()
-    telescope_builtin.help_tags()
+    telescope_builtin.help_tags({
+        attach_mappings = function(_, _)
+            telescope_actions.select_default:replace(telescope_actions.select_vertical)
+            return true -- keep the other default mappings
+        end,
+    })
 end
 
 local function is_py_buffer(bufnr)
     return vim.api.nvim_buf_get_name(bufnr or 0):match("%.py$") ~= nil
 end
 
+-- Lsp
+------
 ---@param showWarning? boolean
 function M.ruff_organize_imports_if_py(showWarning)
     if showWarning == nil then

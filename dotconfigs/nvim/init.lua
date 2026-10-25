@@ -5,8 +5,10 @@
 -- Debug mode
 if vim.env.NVIM_DEBUUG == "true" then
     -- Print every pressed key
-    vim.on_key(function(key)
-        print("Pressed: " .. vim.fn.keytrans(key))
+    vim.on_key(function(_, typed)
+        if typed and typed ~= "" then
+            print("Pressed: " .. vim.fn.keytrans(typed))
+        end
     end)
 end
 
@@ -27,5 +29,3 @@ vim.diagnostic.config({
 
 require("oil-extension")
 require("multiline")
-
-

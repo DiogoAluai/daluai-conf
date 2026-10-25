@@ -4,16 +4,20 @@ local M = {}
 
 -- Constants
 local CTRL_JUMP_VERTICAL_LENGTH = 5
+local CTRL_SCROLL_VERTICAL_LENGTH = 3
 
 function M.bind()
+    ---- Ovewrites
+    ---------------------------------------------------------------
     for _, key in ipairs({ "<MiddleMouse>", "<2-MiddleMouse>", "<3-MiddleMouse>", "<4-MiddleMouse>" }) do
         vim.keymap.set({ "n", "i", "v", "c", "t" }, key, "<Nop>")
     end
-
     vim.keymap.set({ 'n', 'i' }, '<C-S-l>', function()
         local buf = { bufnr = 0 }
         vim.diagnostic.enable(not vim.diagnostic.is_enabled(buf), buf)
     end)
+    pcall(vim.keymap.del, 'n', '<C-W>d')
+    pcall(vim.keymap.del, 'n', '<C-W><C-D>')
 
     ---- Insertion
     ---------------------------------------------------------------
@@ -87,23 +91,24 @@ function M.bind()
     -- Jumps
     vim.keymap.set("n", "<C-Left>", "i<C-Left>", { noremap = false, silent = true })
     vim.keymap.set("n", "<C-Right>", "i<C-Right>", { noremap = false, silent = true })
-    vim.keymap.set("i", "<C-a>", utils.jump_to_start, { noremap = true, silent = true })
+    vim.keymap.set("i", "<C-a>", utils.smart_home, { noremap = true, silent = true })
     vim.keymap.set("i", "<C-e>", utils.jump_to_end, { noremap = true, silent = true })
     vim.keymap.set("n", "<C-e>", utils.jumpt_to_end_into_insert, { noremap = true, silent = true })
     vim.keymap.set("v", "<C-e>", "<Esc>0i", { noremap = true, silent = true })
     vim.keymap.set("v", "<C-a>", "<Esc>$i", { noremap = true, silent = true })
-    vim.keymap.set("n", "<C-a>", utils.jumpt_to_start_into_insert, { noremap = true, silent = true })
+    vim.keymap.set("n", "<C-a>", utils.smart_home_into_insert, { noremap = true, silent = true })
     vim.keymap.set("n", "<C-S-o>", "<C-i>", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-M-Left>", "<C-o>", { noremap = true, silent = true })
     vim.keymap.set("n", "<C-S-BS>", "<C-o>")
     vim.keymap.set("n", "<C-M-Right>", "<C-i>", { noremap = true, silent = true })
     vim.keymap.set("i", "<C-M-Left>", "<C-o><C-o>", { noremap = true, silent = true })
+    vim.keymap.set("i", "<C-S-BS>", "<C-o><C-o>", { noremap = true, silent = true })
     vim.keymap.set("i", "<C-M-Right>", "<C-o><C-i>", { noremap = true, silent = true })
     vim.keymap.set({ "n", "i", "v" }, "<C-Up>", function()
-        utils.jump_x_up(CTRL_JUMP_VERTICAL_LENGTH)
+        utils.jump_x_or_scroll_y_up(CTRL_JUMP_VERTICAL_LENGTH, CTRL_SCROLL_VERTICAL_LENGTH)
     end)
     vim.keymap.set({ "n", "i", "v" }, "<C-Down>", function()
-        utils.jump_x_down(CTRL_JUMP_VERTICAL_LENGTH)
+        utils.jump_x_or_scroll_y_down(CTRL_JUMP_VERTICAL_LENGTH, CTRL_SCROLL_VERTICAL_LENGTH)
     end)
     vim.keymap.set("i", "<Left>", utils.move_left_across_lines, { noremap = true, silent = true })
     vim.keymap.set("i", "<Right>", utils.move_right_across_lines, { noremap = true, silent = true })
@@ -123,19 +128,24 @@ function M.bind()
 
     -- Find
     vim.keymap.set({ "n", "i" }, "<C-f>", utils.find, { noremap = true, silent = true, desc = "Find" })
-    vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>") -- no highlighting
-
-    local function handle_command_escape()
-        local type = vim.fn.getcmdtype()
-        if type == '/' or type == '?' then
-            return '<CR>'
-        end
-        return '<C-c>'
-    end
-    vim.keymap.set("c", "<Esc>", handle_command_escape, { expr = true }) -- Escape doesn't jump around
+    vim.keymap.set("n", "<Esc>", utils.handle_escape_normal_mode)
+    vim.keymap.set("c", "<Esc>", utils.handle_escape_command_mode, { expr = true })
 
     ---- Manipulations
     -------------------------------------------------------------------
+    local refactoring = require("refactoring")
+    vim.keymap.set("x", "<C-M-v>", function()
+            return refactoring.extract_var()
+        end,
+        { expr = true, desc = "Extract variable" }
+    )
+    vim.keymap.set("x" , "<C-M-m>", function()
+            return refactoring.extract_func()
+        end,
+        { expr = true, desc = "Extract method" }
+    )
+    vim.keymap.set({ "n", "i" }, "<S-F6>", vim.lsp.buf.rename, { desc = "LSP rename" })
+
     -- Wrap
     local function prev_char()
         local col = vim.fn.col(".")
@@ -223,7 +233,7 @@ function M.bind()
 
     vim.keymap.set("i", "<C-z>", "<C-o>u", { silent = true })
     vim.keymap.set("i", "<C-S-z>", "<C-o><C-r>", { silent = true })
-    vim.keymap.set("i", "<C-v>", "<C-r>+", { silent = true })
+    vim.keymap.set({ "i", "c" }, "<C-v>", "<C-r>+", { silent = true })
     vim.keymap.set("i", "<C-c>", "<C-o>yy", { silent = true })
 
     -- Ctrl+Shift+Enter = terminal
