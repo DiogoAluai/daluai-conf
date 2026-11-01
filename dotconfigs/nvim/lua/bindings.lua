@@ -57,6 +57,7 @@ function M.bind()
     vim.keymap.set("n", "<S-Right>", "i<C-O>v<Right>")
     vim.keymap.set("n", "<C-S-Left>", "i<C-O>vb")
     vim.keymap.set("n", "<C-S-Right>", "i<C-O>ve")
+    vim.keymap.set("n", "<BS>", "i<BS>")
     --  insert mode
     --  vim.keymap.set("i", "<S-Left>", utils.insert_mode_shift_left_select) -- shift select at the end of the line misses the last character
     --  vim.keymap.set("i", "<C-S-Left>", utils.insert_mode_ctrl_shift_left_select)
@@ -177,6 +178,9 @@ function M.bind()
                     return "<Right>"
                 end
                 if open == "'" and prev_char():match("%w") then
+                    return open
+                end
+                if open == '"' and prev_char():match("%w") then
                     return open
                 end
                 return open .. close .. "<Left>"

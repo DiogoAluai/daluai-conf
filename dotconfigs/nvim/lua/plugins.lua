@@ -392,7 +392,7 @@ return {
             require("nvim-treesitter").install({
                 "bash", "c", "diff", "html", "javascript", "java", "json", "lua",
                 "markdown", "markdown_inline", "python", "query", "regex", "toml",
-                "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
+                "tsx", "typescript", "vim", "vimdoc", "xml", "yaml", "dockerfile"
             })
 
             vim.api.nvim_create_autocmd("FileType", {
@@ -411,7 +411,26 @@ return {
         -- check for available lsps also at: https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
         "neovim/nvim-lspconfig",
         enabled = true,
+        dependencies = {
+            { "mason-org/mason.nvim", opts = {} },
+        },
         config = function()
+            vim.filetype.add({
+                filename = {
+                    [".bash_envs"]          = "bash",
+                    [".bash_aliases"]       = "bash",
+                    [".bash_prompt"]        = "bash",
+                    [".bashrc"]             = "bash",
+                    ["docker-compose.yaml"] = "yaml.docker-compose",
+                    ["docker-compose.yml"]  = "yaml.docker-compose",
+                    ["compose.yaml"]        = "yaml.docker-compose",
+                    ["compose.yml"]         = "yaml.docker-compose",
+                },
+                pattern = {
+                    ["docker%-bake.*%.hcl"] = "hcl.docker-bake",
+                },
+            })
+            vim.lsp.enable("docker_language_server")
             vim.lsp.config('lua_ls', {
                 settings = {
                     Lua = {
@@ -541,7 +560,7 @@ return {
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { 'lsp', 'path', 'snippets' } --'buffer' },
+                default = { 'lsp', 'path', 'snippets' } --, 'buffer' },
             },
 
             -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
