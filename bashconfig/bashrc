@@ -18,6 +18,16 @@ if [ -f ~/.bash_prompt ]; then
     . ~/.bash_prompt
 fi
 
+# todo: verify there are no duplicate configurations in the bashrc file
+# History
+shopt -s histappend
+HISTSIZE=10000
+HISTFILESIZE=10000
+HISTCONTROL=ignoreboth:erasedups   # ignoreboth = ignoredups + ignorespace
+PROMPT_COMMAND="history -a${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+# because we are extending history size, a run without this configuration would snip it, so we change the default location to avoid that
+HISTFILE=~/.bash_history_full
+
 # ########## daluai-conf #########
 # ############## END #############
 
