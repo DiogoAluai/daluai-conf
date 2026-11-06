@@ -7,13 +7,13 @@
 
 # Check arguments
 if [ $# -eq 0 ]; then
-    echo "Usage: $(basename $0) files..."
+    echo "Usage: $(basename "$0") files..."
     exit 1
 fi
 
 
 # Loop through all arguments using a for loop
 for arg in "$@"; do
-  xdg-open "$arg" &
+  xdg-open "$arg" 2>/dev/null & 
 done
 
