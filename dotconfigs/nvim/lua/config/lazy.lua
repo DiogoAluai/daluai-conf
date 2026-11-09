@@ -53,6 +53,7 @@ vim.opt.cursorline = true
 
 vim.opt.scrolloff = 5
 vim.opt.sidescrolloff = 5
+vim.opt.mousescroll = "ver:1,hor:1"
 
 vim.opt.signcolumn = "yes"
 

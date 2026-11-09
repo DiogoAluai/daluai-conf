@@ -26,6 +26,37 @@ vim.diagnostic.config({
     underline = true,
 })
 
+-- WRAPPING
+-- todo: find better place for the wrapping logic
+-- todo: add scrollability to both help buffers and python lib files
+-- todo: add wrapping to help buffers
+-- Line wrapping for markdown files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function()
+        vim.opt_local.wrap = true             -- Enable line wrapping
+        --         vim.opt_local.linebreak = true   -- Break lines at word boundaries
+        --         vim.opt_local.textwidth = 80     -- Set text width for auto-wrapping
+        --      Screen navigation
+        vim.keymap.set("n", "<Down>", "gj", { buffer = true })
+        vim.keymap.set("i", "<Down>", "<C-o>gj", { buffer = true })
+        vim.keymap.set("n", "<Up>", "gk", { buffer = true })
+        vim.keymap.set("i", "<Up>", "<C-o>gk", { buffer = true })
+    end,
+})
+-- Line wrapping for Python library source
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufEnter" }, {
+    pattern = { "*/site-packages/*", "*/dist-packages/*", "*/lib/python3*/*" },
+    callback = function()
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+        vim.keymap.set("n", "<Down>", "gj", { buffer = true })
+        vim.keymap.set("i", "<Down>", "<C-o>gj", { buffer = true })
+        vim.keymap.set("n", "<Up>", "gk", { buffer = true })
+        vim.keymap.set("i", "<Up>", "<C-o>gk", { buffer = true })
+    end,
+})
+------
 
 require("oil-extension")
 require("multiline")

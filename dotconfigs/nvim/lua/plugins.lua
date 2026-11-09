@@ -348,20 +348,6 @@ return {
                 inactive_winbar = {},
                 extensions = {}
             }
-            -- Line wrapping for markdown files
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "markdown",
-                callback = function()
-                    vim.opt_local.wrap = true -- Enable line wrapping
-                    --         vim.opt_local.linebreak = true   -- Break lines at word boundaries
-                    --         vim.opt_local.textwidth = 80     -- Set text width for auto-wrapping
-                    --      Screen navigation
-                    vim.keymap.set("n", "<Down>", "gj", { buffer = true })
-                    vim.keymap.set("i", "<Down>", "<C-o>gj", { buffer = true })
-                    vim.keymap.set("n", "<Up>", "gk", { buffer = true })
-                    vim.keymap.set("i", "<Up>", "<C-o>gk", { buffer = true })
-                end,
-            })
         end
     },
     {
@@ -493,8 +479,8 @@ return {
             })
             vim.lsp.config("bashls", {
                 cmd = {
-                    vim.env.HOME .. "/.nvm/versions/node/v22.23.4/bin/node",
-                    vim.env.HOME .. "/.nvm/versions/node/v22.23.4/bin/bash-language-server",
+                    vim.env.HOME .. "/.nvm/versions/node/v22.16.0/bin/node",
+                    vim.env.HOME .. "/.nvm/versions/node/v22.16.0/bin/bash-language-server",
                     "start",
                 }
             })

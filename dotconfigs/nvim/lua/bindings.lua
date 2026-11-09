@@ -140,7 +140,7 @@ function M.bind()
         end,
         { expr = true, desc = "Extract variable" }
     )
-    vim.keymap.set("x" , "<C-M-m>", function()
+    vim.keymap.set("x", "<C-M-m>", function()
             return refactoring.extract_func()
         end,
         { expr = true, desc = "Extract method" }
@@ -217,6 +217,10 @@ function M.bind()
     vim.keymap.set({ "n", "v", "i" }, "<C-M-l>", function()
             vim.lsp.buf.format()
             utils.ruff_organize_imports_if_py(false)
+            local last = vim.api.nvim_buf_line_count(0)
+            if vim.api.nvim_buf_get_lines(0, last - 1, last, false)[1] ~= "" then
+                vim.api.nvim_buf_set_lines(0, last, last, false, { "" })
+            end
         end,
         { desc = "Format" })
 
