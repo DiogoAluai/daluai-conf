@@ -199,7 +199,8 @@ local COMMENT_PREFIXES = {
     ["sh"]   = "#",
     ["sql"]  = "--",
     ["vim"]  = '"',
-    ["java"] = '//',
+    ["java"] = "//",
+    ["conf"] = "#",
 }
 
 function M.comment_out_current_line()
